@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pixeldrop — Mental health</title>
+  <meta name="description" content="How attention-extractive design harms wellbeing, and how Pixeldrop’s weekly, non-algorithmic photo sharing helps." />
+  <meta name="theme-color" content="#0F1016" />
+  <style>
+    :root{
+      --bg: #0F1016;           /* Dark Gray/Black */
+      --panel: #17102B;        /* Dark Violet-Black */
+      --ink: #EAE9F5;          /* Off-white */
+      --muted: #A7A5C2;        /* Muted text */
+      --purpleBlue: #6037EF;   /* Vivid Purple-Blue */
+      --deepPurple: #5D208B;   /* Deep Purple */
+      --magenta: #C526EE;      /* Bright Magenta */
+      --radius: 18px;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --max: 1200px;
+      --gap: 18px;
+    }
+    *{ box-sizing:border-box }
+    body{
+      margin:0; color:var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(1200px 420px at 80% -10%, rgba(197,38,238,.16), transparent),
+        radial-gradient(900px 360px at 10% 0%, rgba(96,55,239,.18), transparent),
+        var(--bg);
+      scroll-behavior: smooth;
+    }
+    a{ color:#9F86FF; text-decoration:none }
+    a:hover{ text-decoration:underline }
+    .container{ max-width:var(--max); margin:0 auto; padding:20px }
+    header{ position:sticky; top:0; z-index:1000; background: linear-gradient(90deg, rgba(23,16,43,.65), rgba(15,16,22,.65)); backdrop-filter: blur(8px); border-bottom:1px solid rgba(255,255,255,.08) }
+    .row{ display:flex; align-items:center; justify-content:space-between; gap:16px }
+    nav a{ margin:0 10px; font-weight:700; letter-spacing:.2px; opacity:.95 }
+    nav a.active{ text-decoration:underline }
+    .brand{ display:flex; align-items:center; gap:12px }
+    .brand .logo{ width:38px; height:38px; border-radius:10px; filter: drop-shadow(0 0 18px rgba(197,38,238,.35)) }
+    .btn{ display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:999px; font-weight:800; letter-spacing:.2px; border:0; cursor:pointer; box-shadow: var(--shadow) }
+    .btn.primary{ background: linear-gradient(90deg, var(--purpleBlue), var(--magenta)); color:white }
+    .btn.ghost{ background:transparent; color:var(--ink); border:1px solid rgba(255,255,255,.16) }
+    .hero{ padding:72px 20px 40px }
+    h1{ font-size: clamp(2.3rem, 2.8vw + 1.6rem, 4rem); line-height:1.08; margin:10px 0 12px }
+    .lead{ font-size: clamp(1.05rem, .75vw + 1rem, 1.35rem); color:var(--muted) }
+    .cta{ display:flex; gap:12px; flex-wrap:wrap; margin-top:20px }
+    .pill{ display:inline-block; padding:6px 10px; border:1px solid rgba(255,255,255,.14); border-radius:999px; font-size:.9rem; color:#cfc9ff }
+    .gallery{ margin-top:36px; display:grid; grid-template-columns: repeat(12, 1fr); gap:var(--gap) }
+    .frame{ grid-column: span 6; border-radius: 16px; background: linear-gradient(180deg, rgba(96,55,239,.16), rgba(197,38,238,.12)); border:1px solid rgba(255,255,255,.12); height: 260px; display:grid; place-items:center; color: var(--muted) }
+    .section{ padding:56px 20px }
+    .panel{ background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow) }
+    .grid{ display:grid; gap:var(--gap) }
+    .cols-2{ grid-template-columns: repeat(1, 1fr) }
+    .cols-3{ grid-template-columns: repeat(1, 1fr) }
+    @media (min-width: 900px){ .cols-2{ grid-template-columns: repeat(2, 1fr) } .cols-3{ grid-template-columns: repeat(3, 1fr) } }
+    h2{ font-size: clamp(1.6rem, 1.3vw + 1.2rem, 2.2rem); margin:0 0 10px }
+    h3{ margin:6px 0 8px }
+    .kicker{ letter-spacing:.28em; text-transform:uppercase; color:#b8b4d6; font-size:.78rem }
+    .small{ color:var(--muted); font-size:.9rem }
+    .stat{ font-size:2rem; font-weight:900 }
+    .quote{ font-style:italic; color:#d6d2ff }
+    .footer{ padding:40px 20px; border-top:1px solid rgba(255,255,255,.08) }
+
+    /* Sticky local nav */
+    .subnav-wrap{ position:sticky; top:64px; z-index:900; background: linear-gradient(90deg, rgba(23,16,43,.75), rgba(15,16,22,.75)); backdrop-filter: blur(8px); border-bottom:1px solid rgba(255,255,255,.08) }
+    .subnav{ display:flex; gap:16px; overflow:auto; padding:10px 20px; max-width:var(--max); margin:0 auto }
+    .subnav a{ white-space:nowrap; padding:8px 12px; border-radius:999px; border:1px solid rgba(255,255,255,.12) }
+    .subnav a[aria-current="true"]{ background: linear-gradient(90deg, var(--purpleBlue), var(--magenta)); color:white; border-color: transparent }
+
+    /* Simple chart styles */
+    .chart{ width:100%; height: 220px; display:block }
+    .chart-note{ color:var(--muted); font-size:.85rem; margin-top:6px }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container row">
+      <a href="/" class="brand" aria-label="Pixeldrop home">
+        <img class="logo" src="/assets/pixel_drop.png" alt="Pixeldrop logo" width="38" height="38" />
+        <strong>pixeldrop</strong>
+      </a>
+      <nav aria-label="Primary">
+        <a href="/how-it-works">How it works</a>
+        <a href="/mental-health" class="active">Mental health</a>
+        <a href="/power">Power</a>
+        <a href="/blog">Blog</a>
+        <a href="/support-us">Support Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Local sticky subnav -->
+  <div class="subnav-wrap">
+    <div class="subnav" id="subnav">
+      <a href="#why" aria-current="true">Why it matters</a>
+      <a href="#facts">Fast facts</a>
+      <a href="#effects">The feed’s effects</a>
+      <a href="#social-time">Social time ↓</a>
+      <a href="#ad-loop">Ad–attention loop</a>
+      <a href="#pixeldrop-helps">How Pixeldrop helps</a>
+      <a href="#vision">Vision</a>
+      <a href="#join">Join</a>
+    </div>
+  </div>
+
+  <main>
+    <section class="hero container" id="top">
+      <h1>Your mind deserves a quieter feed.</h1>
+      <p class="lead">Post throughout the week. On Friday at 6:00 PM Central, everyone’s photos unlock together. Your timeline shows only the people you follow — never an explore page or posts injected by an algorithm.</p>
+      <div class="cta">
+        <a class="btn primary" href="#join">Join the alpha</a>
+        <a class="btn ghost" href="/how-it-works">See how it works</a>
+        <span class="pill">Next drop: <span id="countdown" style="font-weight:800">calculating…</span></span>
+      </div>
+      <div class="gallery" aria-hidden="true">
+        <div class="frame">screenshot / queue</div>
+        <div class="frame">screenshot / drop day</div>
+      </div>
+    </section>
+
+    <!-- WHY IT MATTERS -->
+    <section class="section" id="why">
+      <div class="container">
+        <div class="panel" style="background: linear-gradient(160deg, rgba(96,55,239,.18), rgba(197,38,238,.14));">
+          <h2>The current normal isn’t normal.</h2>
+          <p>We wake to notifications, graze through an endless feed, and fall asleep to one last scroll. The result is a steady drip of interruptions that splinters attention and turns friendship into performance. It doesn’t have to be this way. A calmer rhythm can make room for wonder, presence, and real connection.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAST FACTS -->
+    <section class="section" id="facts">
+      <div class="container">
+        <div class="kicker">Impact at a glance</div>
+        <h2>How much time are we really giving away?</h2>
+        <div class="grid cols-3">
+          <div class="panel"><div class="stat">[add stat]</div><div class="small">Avg. daily social media time</div></div>
+          <div class="panel"><div class="stat">[add stat]</div><div class="small">Notifications per day</div></div>
+          <div class="panel"><div class="stat">[add stat]</div><div class="small">Phone pickups per day</div></div>
+          <div class="panel"><div class="stat">[add stat]</div><div class="small">Teens reporting anxiety tied to social</div></div>
+          <div class="panel"><div class="stat">[add stat]</div><div class="small">Night waking to check phones</div></div>
+          <div class="panel"><div class="stat">[add stat]</div><div class="small">In‑person social time vs. 10 yrs ago</div></div>
+        </div>
+        <p class="small" style="margin-top:10px">We’ll publish sources and a short evidence brief with the alpha.</p>
+      </div>
+    </section>
+
+    <!-- THE FEED'S EFFECTS -->
+    <section class="section" id="effects">
+      <div class="container grid cols-2">
+        <div class="panel">
+          <h2>The firehose effect</h2>
+          <ul class="small">
+            <li><strong>Overstimulation → scattered attention.</strong> Constant novelty trains the brain to expect interruption.</li>
+            <li><strong>Comparison loops → lower self‑worth.</strong> Public metrics and highlight reels skew what “normal” looks like.</li>
+            <li><strong>Intermittent rewards → compulsive checking.</strong> The refresh roulette keeps you pulling the lever.</li>
+          </ul>
+          <blockquote class="quote" style="margin-top:10px">“We’re competing with sleep, on the margin.” — Reed Hastings</blockquote>
+        </div>
+        <div class="panel">
+          <svg role="img" aria-label="Illustrative bar chart of daily checks" class="chart" viewBox="0 0 640 220">
+            <defs>
+              <linearGradient id="g" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="rgba(96,55,239,.35)"/>
+                <stop offset="1" stop-color="rgba(197,38,238,.2)"/>
+              </linearGradient>
+            </defs>
+            <rect width="640" height="220" rx="12" fill="url(#g)"/>
+            <g transform="translate(40,20)" fill="none">
+              <line x1="0" y1="170" x2="560" y2="170" stroke="currentColor" opacity=".15"/>
+              <g>
+                <rect x="60" y="60" width="120" height="110" rx="8" fill="#ffb3b3"/>
+                <text x="120" y="188" text-anchor="middle" fill="currentColor" opacity=".8" font-size="12">Typical feed</text>
+              </g>
+              <g>
+                <rect x="240" y="100" width="120" height="70" rx="8" fill="#7bd389"/>
+                <text x="300" y="188" text-anchor="middle" fill="currentColor" opacity=".8" font-size="12">Vacation</text>
+              </g>
+              <g>
+                <rect x="420" y="90" width="120" height="80" rx="8" fill="#9ecaff"/>
+                <text x="480" y="188" text-anchor="middle" fill="currentColor" opacity=".8" font-size="12">Pixeldrop weekly</text>
+              </g>
+            </g>
+          </svg>
+          <div class="chart-note">Illustrative only. We’ll replace with data where available.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL TIME DOWN -->
+    <section class="section" id="social-time">
+      <div class="container grid cols-2">
+        <div class="panel">
+          <h2>Less time together, more time staring</h2>
+          <p class="small">In‑person social time has fallen sharply in the U.S. over the past decade. Feeds fill the quiet moments that used to nudge us toward people.</p>
+        </div>
+        <div class="panel">
+          <svg role="img" aria-label="Placeholder line chart: in-person social time trending down" class="chart" viewBox="0 0 640 220">
+            <defs>
+              <linearGradient id="line" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="rgba(197,38,238,.9)"/>
+                <stop offset="1" stop-color="rgba(96,55,239,.7)"/>
+              </linearGradient>
+            </defs>
+            <rect width="640" height="220" rx="12" fill="rgba(255,255,255,.05)"/>
+            <g transform="translate(40,20)" fill="none" stroke-width="3">
+              <polyline points="0,60 60,70 120,80 180,95 240,110 300,130 360,140 420,150 480,160 540,165" stroke="url(#line)"/>
+            </g>
+          </svg>
+          <div class="chart-note">Placeholder trend. We’ll add real data (e.g., ATUS) with citations.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AD–ATTENTION LOOP -->
+    <section class="section" id="ad-loop">
+      <div class="container grid cols-2">
+        <div class="panel">
+          <h2>Why the feed feels like work</h2>
+          <ul class="small">
+            <li><strong>Ads & tracking:</strong> revenue rises when you stay longer, so design tilts toward compulsion.</li>
+            <li><strong>Algorithmic reach:</strong> engagement wins; outrage and aspiration get boosted.</li>
+            <li><strong>Public metrics:</strong> numbers become the conversation.</li>
+          </ul>
+          <blockquote class="quote" style="margin-top:10px">“It did what all ads are supposed to do: create an anxiety relievable by purchase.” — David Foster Wallace</blockquote>
+        </div>
+        <div class="panel">
+          <p class="small">We’ll link a short evidence brief here that explains each mechanism in plain language and points to the research behind it.</p>
+          <div class="pill">Coming soon: Evidence brief</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW PIXELDROP HELPS -->
+    <section class="section" id="pixeldrop-helps">
+      <div class="container">
+        <div class="kicker">Ethical design</div>
+        <h2>Built for human connection, not doomscrolling</h2>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Weekly feed refresh</h3>
+            <p>One shared drop (Fridays, 6:00 PM Central) breaks the habit loop and turns sharing into a moment, not a reflex.</p>
+          </div>
+          <div class="panel">
+            <h3>No algorithmically served content</h3>
+            <p>Your timeline shows only people you follow. No explore page. No injected profiles. No endless “for you.”</p>
+          </div>
+          <div class="panel">
+            <h3>No performative metrics</h3>
+            <p>No public like or follower counts. Celebrate photos, not scores.</p>
+          </div>
+          <div class="panel">
+            <h3>Tight privacy controls</h3>
+            <p>Quiet defaults, clear account‑level controls, opt‑in notifications, and easy export/deletion.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISION / QUOTE -->
+    <section class="section" id="vision">
+      <div class="container grid cols-2">
+        <div class="panel">
+          <h2>A healthier relationship with sharing</h2>
+          <p>Silence is allowed. Boredom is allowed. We want technology that leaves room for friendship, craft, and attention to the world right in front of you.</p>
+          <p class="small">Pixeldrop won’t fix everything. But the right friction points help you choose how you spend your time — not have that choice made for you.</p>
+        </div>
+        <div class="panel" style="display:grid; place-items:center; background: linear-gradient(160deg, rgba(96,55,239,.22), rgba(197,38,238,.18));">
+          <blockquote class="quote" style="max-width:36ch; text-align:center">“I’m very concerned that our society is much more interested in information than wonder, in noise rather than silence.”<br>— Fred Rogers</blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="section" id="join">
+      <div class="container grid cols-2">
+        <div class="panel">
+          <h2>Join the alpha</h2>
+          <p class="lead">No spam, no trackers. We’ll email you when there’s something to try.</p>
+          <form onsubmit="return signup(event)">
+            <label class="small" for="email">Email</label>
+            <input id="email" name="email" type="email" required placeholder="you@example.com"
+              style="width:100%; padding:14px 16px; border-radius: 12px; border:1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); color:var(--ink)">
+            <div style="display:flex; gap:10px; margin-top: 12px">
+              <button class="btn primary" type="submit">Join the alpha</button>
+              <a class="btn ghost" href="/support-us">Support us</a>
+            </div>
+            <p id="msg" class="small" style="margin-top:10px" aria-live="polite"></p>
+          </form>
+        </div>
+        <div class="panel" style="display:grid; place-items:center">
+          <div style="text-align:center">
+            <div class="kicker">Next weekly drop</div>
+            <div id="countdown2" style="font-weight:800; font-size: clamp(1.1rem, 1.2vw + .9rem, 1.8rem); margin-top:6px">calculating…</div>
+            <div class="pill" style="margin-top:10px">Every Friday • 6:00 PM CT (shown in your local time)</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container row">
+      <div>
+        <strong>pixeldrop</strong><br>
+        <small style="color:var(--muted)">© <span id="year"></span> Pixeldrop</small>
+      </div>
+      <div style="color:var(--muted)">
+        <a href="/privacy">Privacy</a> · <a href="/code-of-conduct">Code of Conduct</a> · <a href="/dmca">DMCA</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Countdown to Friday 6:00 PM America/Chicago (displayed in visitor local time)
+    (function(){
+      const tz = 'America/Chicago';
+      const dtf = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour12:false, year:'numeric', month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' });
+      function parts(date){ return Object.fromEntries(dtf.formatToParts(date).map(p=>[p.type, p.value])); }
+      function centralNowAsUTC(){ const p = parts(new Date()); return new Date(Date.UTC(p.year, p.month-1, p.day, p.hour, p.minute, p.second)); }
+      function toUTCFromCentralLocal(year, month, day, hour, minute){ const assumed = new Date(Date.UTC(year, month-1, day, hour, minute, 0)); const pp = parts(assumed); const assumedAsUTC = Date.UTC(pp.year, pp.month-1, pp.day, pp.hour, pp.minute, pp.second); const offsetMin = (assumedAsUTC - assumed.getTime()) / 60000; return new Date(assumed.getTime() - offsetMin*60000); }
+      function nextFriday18CT(){ const nowCentralUTC = centralNowAsUTC(); const dow = nowCentralUTC.getUTCDay(); const FRIDAY = 5; let add = (7 + FRIDAY - dow) % 7; const mins = nowCentralUTC.getUTCHours()*60 + nowCentralUTC.getUTCMinutes(); if(add === 0 && mins >= 18*60) add = 7; const y = nowCentralUTC.getUTCFullYear(); const m = nowCentralUTC.getUTCMonth(); const d = nowCentralUTC.getUTCDate() + add; return toUTCFromCentralLocal(y, m+1, d, 18, 0); }
+      const target = nextFriday18CT();
+      function tick(){ const now = new Date(); const diff = target - now; const el1 = document.getElementById('countdown'); const el2 = document.getElementById('countdown2'); if(diff <= 0){ if(el1) el1.textContent = 'dropping now ✨'; if(el2) el2.textContent = 'dropping now ✨'; return; } const d = Math.floor(diff / (1000*60*60*24)); const h = Math.floor((diff / (1000*60*60)) % 24); const m = Math.floor((diff / (1000*60)) % 60); const s = Math.floor((diff / 1000) % 60); const text = `${d}d ${h}h ${m}m ${s}s`; if(el1) el1.textContent = text; if(el2) el2.textContent = text; }
+      tick(); setInterval(tick, 1000);
+    })();
+
+    // Local subnav highlight
+    (function(){
+      const anchors = ['why','facts','effects','social-time','ad-loop','pixeldrop-helps','vision','join'];
+      const links = anchors.map(id => [id, document.querySelector(`.subnav a[href='#${id}']`)]);
+      const io = new IntersectionObserver((entries)=>{
+        entries.forEach(e => {
+          if(e.isIntersecting){
+            links.forEach(([id, a]) => a && a.setAttribute('aria-current', e.target.id === id ? 'true' : 'false'))
+          }
+        })
+      }, { rootMargin: '-30% 0px -65% 0px', threshold: 0.01 });
+      anchors.forEach(id => { const el = document.getElementById(id); if(el) io.observe(el); });
+    })();
+
+    // Newsletter placeholder
+    function signup(e){ e.preventDefault(); const email = document.getElementById('email').value.trim(); const msg = document.getElementById('msg'); if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ msg.textContent='Please enter a valid email.'; return false; } msg.textContent='Thanks — we\'ll be in touch.'; e.target.reset(); return false; }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

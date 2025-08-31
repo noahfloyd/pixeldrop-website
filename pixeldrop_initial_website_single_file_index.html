@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pixeldrop — A calmer photo app</title>
+  <meta name="description" content="Pixeldrop is a federated, photo-first social app built for mental health. Weekly feed refresh. No algorithmically served content. No ads or tracking." />
+  <meta name="theme-color" content="#0F1016" />
+  <link rel="icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAeMklEQVR42u19...TRUNCATED_IN_CANVAS_FOR_READABILITY..." />
+  <style>
+    /* Permanent dark theme with vibrant gradients */
+    :root{
+      --bg: #0F1016;
+      --panel: #17102B;
+      --ink: #EAE9F5;
+      --muted: #A7A5C2;
+      --purpleBlue: #6037EF;
+      --deepPurple: #5D208B;
+      --magenta: #C526EE;
+      --violetBlack: #17102B;
+      --radius: 18px;
+      --shadow: 0 20px 60px rgba(0,0,0,.45);
+      --max: 1200px;
+      --grid-gap: 18px;
+    }
+    *{
+      box-sizing: border-box;
+    }
+    body{
+      margin:0;
+      color:var(--ink);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
+      background:
+        radial-gradient(1200px 400px at 80% -10%, rgba(197,38,238,.16), transparent),
+        radial-gradient(900px 360px at 10% 0%, rgba(96,55,239,.18), transparent),
+        var(--bg);
+    }
+    a{ color:#9F86FF; text-decoration:none }
+    a:hover{ text-decoration:underline }
+    .container{ max-width: var(--max); margin: 0 auto; padding: 20px; }
+    header{ position: sticky; top:0; z-index:1000; background: linear-gradient(90deg, rgba(23,16,43,.65), rgba(15,16,22,.65)); backdrop-filter: blur(8px); border-bottom: 1px solid rgba(255,255,255,.08);}    
+    .row{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
+    nav a{ margin:0 10px; font-weight:700; letter-spacing:.2px; opacity:.95 }
+    .brand{ display:flex; align-items:center; gap:12px }
+    .logo{ width:38px; height:38px; border-radius:10px; filter: drop-shadow(0 0 18px rgba(197,38,238,.35)); }
+    .btn{ display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius: 999px; font-weight:800; letter-spacing:.2px; border:0; cursor:pointer; box-shadow: var(--shadow);}
+    .btn.primary{ background: linear-gradient(90deg, var(--purpleBlue), var(--magenta)); color:white; }
+    .btn.ghost{ background: transparent; color:var(--ink); border:1px solid rgba(255,255,255,.16) }
+    .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); font-size:.85rem; color:#D8D5FF }
+    .hero{ padding: 72px 20px 40px; }
+    h1{ font-size: clamp(2.4rem, 2.8vw + 1.6rem, 4rem); line-height:1.08; margin: 10px 0 12px }
+    .lead{ font-size: clamp(1.05rem, .75vw + 1rem, 1.35rem); color: var(--muted) }
+    .cta{ display:flex; gap:12px; flex-wrap:wrap; margin-top: 20px }
+    .gallery{ margin-top: 36px; display:grid; grid-template-columns: repeat(12, 1fr); gap: var(--grid-gap) }
+    .frame{ grid-column: span 4; border-radius: 16px; background: linear-gradient(180deg, rgba(96,55,239,.16), rgba(197,38,238,.12)); border: 1px solid rgba(255,255,255,.12); height: 220px; display:grid; place-items:center; color: var(--muted); }
+    .frame.tall{ grid-column: span 8; height: 280px }
+    .section{ padding: 56px 20px; }
+    .panel{ background: var(--panel); border:1px solid rgba(255,255,255,.08); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow) }
+    .grid{ display:grid; gap: var(--grid-gap) }
+    .cols-2{ grid-template-columns: repeat(1, 1fr) }
+    .cols-3{ grid-template-columns: repeat(1, 1fr) }
+    @media (min-width: 900px){
+      .cols-2{ grid-template-columns: repeat(2, 1fr) }
+      .cols-3{ grid-template-columns: repeat(3, 1fr) }
+    }
+    h2{ font-size: clamp(1.6rem, 1.3vw + 1.2rem, 2.2rem); margin: 0 0 10px }
+    h3{ margin: 6px 0 8px }
+    .kicker{ letter-spacing:.28em; text-transform: uppercase; color: #b8b4d6; font-size:.78rem }
+    .list{ margin:0; padding-left: 18px; color: var(--muted) }
+    .pill{ display:inline-block; padding:5px 10px; border:1px solid rgba(255,255,255,.14); border-radius: 999px; margin: 6px 6px 0 0; font-size:.9rem; color:#cfc9ff }
+    .footer{ padding: 40px 20px; border-top:1px solid rgba(255,255,255,.08) }
+    .countdown{ font-weight: 800; font-size: clamp(1.1rem, 1.2vw + .9rem, 1.8rem) }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container row">
+      <div class="brand">
+        <img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAYAAACLz2ctAAAeMklEQVR42u19...TRUNCATED..." alt="Pixeldrop logo" width="38" height="38" />
+        <strong>pixeldrop</strong>
+        <span class="badge">no ads • no tracking • open source</span>
+      </div>
+      <nav aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/how-it-works">How it works</a>
+        <a href="/attention-economy">The Attention Economy</a>
+        <a href="/governance-problem">The Governance Problem</a>
+        <a href="/blog">Blog</a>
+        <a href="/support-us">Support Us</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero container">
+      <div class="kicker">Calm, communal, intentional</div>
+      <h1>A weekly photo app with no algorithmically served content.</h1>
+      <p class="lead">Post throughout the week. On drop day, everyone’s photos unlock together. Your timeline shows only the people you chose to follow — never an explore page or posts injected by an algorithm.</p>
+      <div class="cta">
+        <a class="btn primary" href="#newsletter">Join the alpha</a>
+        <a class="btn ghost" href="/support-us">Support us</a>
+        <span class="pill">Next drop: <span id="countdown" class="countdown">calculating…</span></span>
+      </div>
+      <!-- Screenshot / promo image frames -->
+      <div class="gallery">
+        <div class="frame tall">screenshot area</div>
+        <div class="frame">promo image</div>
+        <div class="frame">promo image</div>
+      </div>
+    </section>
+
+    <!-- FEATURES: design features -->
+    <section class="section">
+      <div class="container">
+        <div class="kicker">Design features</div>
+        <h2>Built for less doomscrolling and more delight.</h2>
+        <div class="grid cols-2">
+          <div class="panel">
+            <h3>Weekly feed refresh</h3>
+            <p>Your feed updates once a week, creating space to live first and share later.</p>
+          </div>
+          <div class="panel">
+            <h3>No algorithmically served content</h3>
+            <p>Only see posts from people you follow. No explore page. No injected profiles. No endless “for you.”</p>
+          </div>
+          <div class="panel">
+            <h3>No performative metrics</h3>
+            <p>We remove public like and follower counts to dial down comparison and clout-chasing.</p>
+          </div>
+          <div class="panel">
+            <h3>Tight privacy controls</h3>
+            <p>Private by default options, account-level controls, and thoughtful notifications that don’t hijack your attention.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRINCIPLES / OPEN ENDED -->
+    <section class="section">
+      <div class="container">
+        <div class="kicker">What we stand for</div>
+        <h2>Pixeldrop is a different kind of social app.</h2>
+        <div class="grid cols-3">
+          <div class="panel">
+            <h3>No ads. No tracking.</h3>
+            <p>We don’t sell attention or collect shadow profiles. There’s no ad-tech, pixels, or third‑party trackers on this site or in the app.</p>
+          </div>
+          <div class="panel">
+            <h3>Federated with ActivityPub</h3>
+            <p>Pixeldrop is part of the Fediverse. That means communities can run their own servers and still follow each other across the network.</p>
+          </div>
+          <div class="panel">
+            <h3>Open source</h3>
+            <p>Our code is open and forkable. We build in public so anyone can inspect, contribute, or run their own instance.</p>
+          </div>
+          <div class="panel">
+            <h3>Made to be created with</h3>
+            <p>We encourage people to create their own spaces, experiment, and contribute — not lock them in.</p>
+          </div>
+          <div class="panel">
+            <h3>Not for sale</h3>
+            <p>We’re aiming for a social network free from corporate capture. Community support keeps the lights on; governance keeps incentives aligned.</p>
+          </div>
+          <div class="panel">
+            <h3>Choice and control</h3>
+            <p>You choose who you follow, and each server chooses what to accept. We default to media-first timelines and clear, local moderation.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NEWSLETTER / ALPHA SIGNUP (placeholder) -->
+    <section id="newsletter" class="section">
+      <div class="container">
+        <div class="grid cols-2">
+          <div class="panel">
+            <h2>Join the alpha</h2>
+            <p class="lead">No spam, no trackers. We’ll email you when there’s something to try.</p>
+            <form onsubmit="return signup(event)">
+              <label class="sr-only" for="email">Email address</label>
+              <input id="email" name="email" type="email" required placeholder="you@example.com"
+                style="width:100%; padding:14px 16px; border-radius: 12px; border:1px solid rgba(255,255,255,.18); background: rgba(255,255,255,.06); color:var(--ink)">
+              <div style="display:flex; gap:10px; margin-top: 12px">
+                <button class="btn primary" type="submit">Join the alpha</button>
+                <a class="btn ghost" href="/support-us">Support us</a>
+              </div>
+              <p id="msg" style="margin-top:10px; color:#cfc9ff" aria-live="polite"></p>
+            </form>
+          </div>
+          <div class="panel" style="display:grid; place-items:center; background: linear-gradient(160deg, rgba(96,55,239,.22), rgba(197,38,238,.18));">
+            <div style="text-align:center">
+              <div class="kicker">Next weekly drop</div>
+              <div id="countdown2" class="countdown" style="margin-top:6px">calculating…</div>
+              <div class="pill" style="margin-top:10px">Default: Sunday 5:00 PM (local time)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container row">
+      <div>
+        <strong>pixeldrop</strong><br>
+        <small style="color:var(--muted)">© <span id="year"></span> Pixeldrop • no ads • no tracking • open source</small>
+      </div>
+      <div style="color:var(--muted)">
+        <a href="/privacy">Privacy</a> · <a href="/code-of-conduct">Code of Conduct</a> · <a href="/dmca">DMCA</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Countdown (Sunday 17:00 local)
+    (function() {
+      function nextTarget(dow, hour, minute) {
+        const now = new Date();
+        const t = new Date(now);
+        const diffToDow = (7 + dow - now.getDay()) % 7;
+        const isPastToday = (now.getHours() > hour) || (now.getHours() === hour && now.getMinutes() >= minute);
+        t.setDate(now.getDate() + (diffToDow === 0 && isPastToday ? 7 : diffToDow));
+        t.setHours(hour, minute, 0, 0);
+        return t;
+      }
+      const target = nextTarget(0, 17, 0);
+      function tick() {
+        const now = new Date();
+        const diff = target - now;
+        const el1 = document.getElementById('countdown');
+        const el2 = document.getElementById('countdown2');
+        if (diff <= 0) { el1.textContent = 'dropping now ✨'; if(el2) el2.textContent = 'dropping now ✨'; return; }
+        const d = Math.floor(diff / (1000*60*60*24));
+        const h = Math.floor((diff / (1000*60*60)) % 24);
+        const m = Math.floor((diff / (1000*60)) % 60);
+        const s = Math.floor((diff / 1000) % 60);
+        const text = `${d}d ${h}h ${m}m ${s}s`;
+        el1.textContent = text; if (el2) el2.textContent = text;
+      }
+      tick();
+      setInterval(tick, 1000);
+    })();
+
+    // newsletter placeholder
+    function signup(e) {
+      e.preventDefault();
+      const email = document.getElementById('email').value.trim();
+      const msg = document.getElementById('msg');
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { msg.textContent = 'Please enter a valid email.'; return false; }
+      msg.textContent = 'Thanks — we\'ll be in touch.';
+      e.target.reset();
+      return false;
+    }
+
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
