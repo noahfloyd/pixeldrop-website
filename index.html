@@ -34,25 +34,31 @@
     .container{ max-width:var(--max); margin:0 auto; padding:20px }
     header{ position:sticky; top:0; z-index:1000; background: linear-gradient(90deg, rgba(23,16,43,.65), rgba(15,16,22,.65)); backdrop-filter: blur(8px); border-bottom:1px solid rgba(255,255,255,.08) }
     .row{ display:flex; align-items:center; justify-content:space-between; gap:16px }
-    nav a{ margin:0 10px; font-weight:700; letter-spacing:.2px; opacity:.95 }
+    nav a{ margin:0 10px; font-weight:700; letter-spacing:.2px; opacity:.95; color:white; text-decoration:none }
+    nav a:hover{ text-decoration:none }
     .brand{ display:flex; align-items:center; gap:12px }
     .brand .logo{ width:38px; height:38px; border-radius:10px; filter: drop-shadow(0 0 18px rgba(197,38,238,.35)) }
     .btn{ display:inline-flex; align-items:center; gap:10px; padding:12px 18px; border-radius:999px; font-weight:800; letter-spacing:.2px; border:0; cursor:pointer; box-shadow: var(--shadow) }
     .btn.primary{ background: linear-gradient(90deg, var(--purpleBlue), var(--magenta)); color:white }
     .btn.ghost{ background:transparent; color:var(--ink); border:1px solid rgba(255,255,255,.16) }
     .hero{ padding:72px 20px 40px }
+    .hero-grid{ display:grid; gap:var(--gap) }
     h1{ font-size: clamp(2.3rem, 2.8vw + 1.6rem, 4rem); line-height:1.08; margin:10px 0 12px }
     .lead{ font-size: clamp(1.05rem, .75vw + 1rem, 1.35rem); color:var(--muted) }
     .cta{ display:flex; gap:12px; flex-wrap:wrap; margin-top:20px }
-    .gallery{ margin-top:36px; display:grid; grid-template-columns: repeat(12, 1fr); gap:var(--gap) }
-    .frame{ grid-column: span 4; border-radius: 16px; background: linear-gradient(180deg, rgba(96,55,239,.16), rgba(197,38,238,.12)); border:1px solid rgba(255,255,255,.12); height:220px; display:grid; place-items:center; color:var(--muted) }
-    .frame.tall{ grid-column: span 8; height:280px }
+    .preview{ border-radius:16px; background: linear-gradient(180deg, rgba(96,55,239,.16), rgba(197,38,238,.12)); border:1px solid rgba(255,255,255,.12); height:260px; display:grid; place-items:center; color:var(--muted) }
+    .hero-grid .preview{ margin-top:36px }
     .section{ padding:56px 20px }
     .panel{ background:var(--panel); border:1px solid rgba(255,255,255,.08); border-radius:var(--radius); padding:20px; box-shadow:var(--shadow) }
     .grid{ display:grid; gap:var(--gap) }
     .cols-2{ grid-template-columns: repeat(1, 1fr) }
     .cols-3{ grid-template-columns: repeat(1, 1fr) }
-    @media (min-width: 900px){ .cols-2{ grid-template-columns: repeat(2, 1fr) } .cols-3{ grid-template-columns: repeat(3, 1fr) } }
+    @media (min-width: 900px){
+      .cols-2{ grid-template-columns: repeat(2, 1fr) }
+      .cols-3{ grid-template-columns: repeat(3, 1fr) }
+      .hero-grid{ grid-template-columns:1fr 1fr; align-items:center }
+      .hero-grid .preview{ margin-top:0; height:360px }
+    }
     h2{ font-size: clamp(1.6rem, 1.3vw + 1.2rem, 2.2rem); margin:0 0 10px }
     h3{ margin:6px 0 8px }
     .kicker{ letter-spacing:.28em; text-transform:uppercase; color:#b8b4d6; font-size:.78rem }
@@ -69,7 +75,6 @@
         <strong>pixeldrop</strong>
       </a>
       <nav aria-label="Primary">
-        <a href="/how-it-works">How it works</a>
         <a href="/mental-health">Mental health</a>
         <a href="/power">Power</a>
         <a href="/blog">Blog</a>
@@ -81,53 +86,50 @@
   <main>
     <!-- HERO -->
     <section class="hero container">
-      <h1>Share your week, not every minute.</h1>
-      <p class="lead">Post throughout the week. On drop day, everyone’s photos unlock together. Your timeline shows only the people you follow — never an explore page or posts injected by an algorithm.</p>
-      <div class="cta">
-        <a class="btn primary" href="#newsletter">Join the alpha</a>
-        <a class="btn ghost" href="/support-us">Support us</a>
-        <span class="pill">Next drop: <span id="countdown" class="countdown">calculating…</span></span>
-      </div>
-      <!-- Screenshot / promo image frames -->
-      <div class="gallery">
-        <div class="frame tall">screenshot area</div>
-        <div class="frame">promo image</div>
-        <div class="frame">promo image</div>
+      <div class="hero-grid">
+        <div>
+          <h1>Share your week, not every minute.</h1>
+          <p class="lead">Post throughout the week. On drop day, everyone’s photos unlock together. Your timeline shows only the people you follow — never an explore page or posts injected by an algorithm.</p>
+          <div class="cta">
+            <a class="btn primary" href="#newsletter">Join the alpha</a>
+            <a class="btn ghost" href="/support-us">Support us</a>
+            <span class="pill">Next drop: <span id="countdown" class="countdown">calculating…</span></span>
+          </div>
+        </div>
+        <div class="preview">screenshot area</div>
       </div>
     </section>
 
-    <!-- BLURB -->
+    <!-- ATTENTION & DESIGN -->
     <section class="section">
       <div class="container">
         <div class="panel" style="background: linear-gradient(160deg, rgba(96,55,239,.18), rgba(197,38,238,.14));">
           <h2>Reclaim your attention.</h2>
           <p>We all feel it: our relationship with technology has become unhealthy and unsustainable. Social media should help us connect — not serve corporate interests. Pixeldrop is a small rebellion for people curious about a healthier way. It’s for those who want to take back their attention yet still believe technology can be good when it serves human connection.</p>
         </div>
-      </div>
-    </section>
 
-    <!-- ETHICAL DESIGN -->
-    <section class="section">
-      <div class="container">
-        <div class="kicker">Ethical design</div>
-        <h2>built for human connection, not doomscrolling</h2>
-        <div class="grid cols-2">
+        <div class="grid cols-2" style="margin-top:var(--gap)">
           <div class="panel">
             <h3>Weekly feed refresh</h3>
             <p>Your feed updates once a week, creating space to live first and share later.</p>
           </div>
+          <div class="preview">screenshot area</div>
+        </div>
+
+        <div class="grid cols-2" style="margin-top:var(--gap)">
           <div class="panel">
             <h3>No algorithmically served content</h3>
             <p>Only posts from people you follow. No explore page. No injected profiles. No endless “for you.”</p>
           </div>
+          <div class="preview">screenshot area</div>
+        </div>
+
+        <div class="grid cols-2" style="margin-top:var(--gap)">
           <div class="panel">
-            <h3>No performative metrics</h3>
-            <p>We remove public like and follower counts to dial down comparison and clout-chasing.</p>
+            <h3>Be yourself</h3>
+            <p>No public like or follower counts. Small circles keep sharing authentic and low-pressure.</p>
           </div>
-          <div class="panel">
-            <h3>Tight privacy controls</h3>
-            <p>Private-by-default options, clear account controls, and notifications that don’t hijack your attention.</p>
-          </div>
+          <div class="preview">screenshot area</div>
         </div>
       </div>
     </section>
@@ -135,9 +137,9 @@
     <!-- PRINCIPLES -->
     <section class="section">
       <div class="container">
-        <div class="kicker">What we stand for</div>
-        <h2>Pixeldrop is a different kind of social app.</h2>
+        <h2>Power to people, not platforms.</h2>
         <div class="grid cols-3">
+          <div class="panel">
             <h3>No ads. No tracking.</h3>
             <p>We don’t sell attention or collect shadow profiles. No ad-tech, no tracking pixels, no third-party data brokers.</p>
           </div>
@@ -190,6 +192,15 @@
               <div class="pill" style="margin-top:10px">Every Friday • 6:00 PM CT (shown in your local time)</div>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="panel" style="text-align:center">
+          <h2>Want a more traditional social media experience without big tech?</h2>
+          <p><a href="https://pixelfed.org">Try Pixelfed</a>.</p>
         </div>
       </div>
     </section>
