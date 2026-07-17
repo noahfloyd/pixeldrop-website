@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-labelledby="title desc">
+  <title id="title">Pixeldrop resting orb mark</title>
+  <desc id="desc">A fixed circular field of colored square tiles within a quiet ring.</desc>
+  <defs>
+    <clipPath id="orb-clip"><circle cx="64" cy="64" r="48"/></clipPath>
+  </defs>
+  <circle cx="64" cy="64" r="55" fill="none" stroke="#c9b186" stroke-width="2" opacity=".78"/>
+  <g clip-path="url(#orb-clip)" fill="#211612">
+    <rect x="16" y="16" width="96" height="96"/>
+    <rect x="18" y="18" width="11" height="11" fill="#7d8590"/>
+    <rect x="32" y="18" width="11" height="11" fill="#d99756"/>
+    <rect x="46" y="18" width="11" height="11" fill="#c9b186"/>
+    <rect x="60" y="18" width="11" height="11" fill="#6e92b5"/>
+    <rect x="74" y="18" width="11" height="11" fill="#9a7ab5"/>
+    <rect x="88" y="18" width="11" height="11" fill="#d97a8e"/>
+    <rect x="102" y="18" width="11" height="11" fill="#7a9a6e"/>
+    <rect x="18" y="32" width="11" height="11" fill="#d99756"/>
+    <rect x="32" y="32" width="11" height="11" fill="#c8584a"/>
+    <rect x="46" y="32" width="11" height="11" fill="#d97a8e"/>
+    <rect x="60" y="32" width="11" height="11" fill="#c9b186"/>
+    <rect x="74" y="32" width="11" height="11" fill="#7a9a6e"/>
+    <rect x="88" y="32" width="11" height="11" fill="#6e92b5"/>
+    <rect x="102" y="32" width="11" height="11" fill="#9a7ab5"/>
+    <rect x="18" y="46" width="11" height="11" fill="#9a7ab5"/>
+    <rect x="32" y="46" width="11" height="11" fill="#7a9a6e"/>
+    <rect x="46" y="46" width="11" height="11" fill="#d99756"/>
+    <rect x="60" y="46" width="11" height="11" fill="#c8584a"/>
+    <rect x="74" y="46" width="11" height="11" fill="#d97a8e"/>
+    <rect x="88" y="46" width="11" height="11" fill="#c9b186"/>
+    <rect x="102" y="46" width="11" height="11" fill="#7d8590"/>
+    <rect x="18" y="60" width="11" height="11" fill="#6e92b5"/>
+    <rect x="32" y="60" width="11" height="11" fill="#c9b186"/>
+    <rect x="46" y="60" width="11" height="11" fill="#7a9a6e"/>
+    <rect x="60" y="60" width="11" height="11" fill="#d99756"/>
+    <rect x="74" y="60" width="11" height="11" fill="#9a7ab5"/>
+    <rect x="88" y="60" width="11" height="11" fill="#c8584a"/>
+    <rect x="102" y="60" width="11" height="11" fill="#d97a8e"/>
+    <rect x="18" y="74" width="11" height="11" fill="#d97a8e"/>
+    <rect x="32" y="74" width="11" height="11" fill="#6e92b5"/>
+    <rect x="46" y="74" width="11" height="11" fill="#9a7ab5"/>
+    <rect x="60" y="74" width="11" height="11" fill="#7a9a6e"/>
+    <rect x="74" y="74" width="11" height="11" fill="#c9b186"/>
+    <rect x="88" y="74" width="11" height="11" fill="#d99756"/>
+    <rect x="102" y="74" width="11" height="11" fill="#c8584a"/>
+    <rect x="18" y="88" width="11" height="11" fill="#7a9a6e"/>
+    <rect x="32" y="88" width="11" height="11" fill="#9a7ab5"/>
+    <rect x="46" y="88" width="11" height="11" fill="#7d8590"/>
+    <rect x="60" y="88" width="11" height="11" fill="#d97a8e"/>
+    <rect x="74" y="88" width="11" height="11" fill="#6e92b5"/>
+    <rect x="88" y="88" width="11" height="11" fill="#c8584a"/>
+    <rect x="102" y="88" width="11" height="11" fill="#d99756"/>
+    <rect x="18" y="102" width="11" height="11" fill="#c8584a"/>
+    <rect x="32" y="102" width="11" height="11" fill="#c9b186"/>
+    <rect x="46" y="102" width="11" height="11" fill="#6e92b5"/>
+    <rect x="60" y="102" width="11" height="11" fill="#7d8590"/>
+    <rect x="74" y="102" width="11" height="11" fill="#d99756"/>
+    <rect x="88" y="102" width="11" height="11" fill="#7a9a6e"/>
+    <rect x="102" y="102" width="11" height="11" fill="#9a7ab5"/>
+  </g>
+</svg>

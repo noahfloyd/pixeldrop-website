@@ -1,511 +1,257 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Pixeldrop — Intentional Social Media</title>
-  <meta name="description" content="Pixeldrop is intentional social media for photos: share through the week, then unlock together on drop day—friends only, custom circles, no ads or tracking." />
-  <meta name="theme-color" content="#0F1016" />
-  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
-  <style>
-    :root {
-      --bg: #0F1016;
-      /* Dark Gray/Black */
-      --panel: #17102B;
-      /* Dark Violet-Black */
-      --ink: #EAE9F5;
-      --muted: #A7A5C2;
-      --purpleBlue: #6037EF;
-      /* Vivid Purple-Blue */
-      --deepPurple: #5D208B;
-      /* Deep Purple */
-      --magenta: #C526EE;
-      /* Bright Pink/Magenta */
-      --radius: 18px;
-      --shadow: 0 20px 60px rgba(0, 0, 0, .45);
-      --max: 1200px;
-      --gap: 18px;
-    }
-
-    * {
-      box-sizing: border-box
-    }
-
-    body {
-      margin: 0;
-      color: var(--ink);
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, "Helvetica Neue", Arial;
-      background:
-        radial-gradient(1200px 420px at 80% -10%, rgba(197, 38, 238, .16), transparent),
-        radial-gradient(900px 360px at 10% 0%, rgba(96, 55, 239, .18), transparent),
-        var(--bg);
-    }
-
-    a {
-      color: #9F86FF;
-      text-decoration: none
-    }
-
-    a:hover {
-      text-decoration: underline
-    }
-
-    .container {
-      max-width: var(--max);
-      margin: 0 auto;
-      padding: 20px
-    }
-
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      background: linear-gradient(90deg, rgba(23, 16, 43, .65), rgba(15, 16, 22, .65));
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid rgba(255, 255, 255, .08)
-    }
-
-    .row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px
-    }
-
-    nav a {
-      margin: 0 10px;
-      font-weight: 700;
-      letter-spacing: .2px;
-      opacity: .95;
-      color: white;
-      text-decoration: none
-    }
-
-    nav a:hover {
-      text-decoration: none
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px
-    }
-
-    .brand .logo {
-      width: 38px;
-      height: 38px;
-      border-radius: 10px;
-      filter: drop-shadow(0 0 18px rgba(197, 38, 238, .35))
-    }
-
-    .brand {
-      color: white;
-      text-decoration: none;
-    }
-
-    .brand:hover {
-      text-decoration: none;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 12px 18px;
-      border-radius: 999px;
-      font-weight: 800;
-      letter-spacing: .2px;
-      border: 0;
-      cursor: pointer;
-      box-shadow: var(--shadow)
-    }
-
-    .btn.primary {
-      background: linear-gradient(90deg, var(--purpleBlue), var(--magenta));
-      color: white
-    }
-
-    .btn.ghost {
-      background: transparent;
-      color: var(--ink);
-      border: 1px solid rgba(255, 255, 255, .16)
-    }
-
-    /* Store buttons (simple, “stock-ish”, image-free) */
-    .btn.store {
-      background: rgba(255, 255, 255, .06);
-      color: var(--ink);
-      border: 1px solid rgba(255, 255, 255, .16);
-      text-decoration: none;
-      padding: 10px 14px;
-    }
-
-    .btn.store:hover {
-      text-decoration: none;
-      border-color: rgba(255, 255, 255, .26)
-    }
-
-    .btn.store .badge {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.05;
-    }
-
-    .btn.store .badge small {
-      font-size: .72rem;
-      color: var(--muted);
-      font-weight: 800;
-      letter-spacing: .18em;
-      text-transform: uppercase;
-    }
-
-    .btn.store .badge strong {
-      font-size: 1.02rem;
-      font-weight: 900;
-      color: var(--ink);
-    }
-
-    .btn.store svg {
-      width: 20px;
-      height: 20px;
-      flex: 0 0 20px;
-      opacity: .95
-    }
-
-    .hero {
-      padding: 72px 20px 40px
-    }
-
-    .hero-grid {
-      display: grid;
-      gap: var(--gap)
-    }
-
-    h1 {
-      font-size: clamp(2.3rem, 2.8vw + 1.6rem, 4rem);
-      line-height: 1.08;
-      margin: 10px 0 12px
-    }
-
-    .lead {
-      font-size: clamp(1.05rem, .75vw + 1rem, 1.35rem);
-      color: var(--muted)
-    }
-
-    .cta {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 20px
-    }
-
-    .preview {
-      border-radius: 16px;
-      background: linear-gradient(180deg, rgba(96, 55, 239, .16), rgba(197, 38, 238, .12));
-      border: 1px solid rgba(255, 255, 255, .12);
-      height: 260px;
-      display: grid;
-      place-items: center;
-      color: var(--muted)
-    }
-
-    .hero-grid .preview {
-      margin-top: 36px
-    }
-
-    .section {
-      padding: 56px 20px
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid rgba(255, 255, 255, .08);
-      border-radius: var(--radius);
-      padding: 20px;
-      box-shadow: var(--shadow)
-    }
-
-    .grid {
-      display: grid;
-      gap: var(--gap)
-    }
-
-    .cols-2 {
-      grid-template-columns: repeat(1, 1fr)
-    }
-
-    .cols-3 {
-      grid-template-columns: repeat(1, 1fr)
-    }
-
-    @media (min-width: 900px) {
-      .cols-2 {
-        grid-template-columns: repeat(2, 1fr)
-      }
-
-      .cols-3 {
-        grid-template-columns: repeat(3, 1fr)
-      }
-
-      .hero-grid {
-        grid-template-columns: 1fr 1fr;
-        align-items: center
-      }
-
-      .hero-grid .preview {
-        margin-top: 0;
-        height: 360px
-      }
-    }
-
-    h2 {
-      font-size: clamp(1.6rem, 1.3vw + 1.2rem, 2.2rem);
-      margin: 0 0 10px
-    }
-
-    h3 {
-      margin: 6px 0 8px
-    }
-
-    .kicker {
-      letter-spacing: .28em;
-      text-transform: uppercase;
-      color: #b8b4d6;
-      font-size: .78rem
-    }
-
-    .pill {
-      display: inline-block;
-      padding: 5px 10px;
-      border: 1px solid rgba(255, 255, 255, .14);
-      border-radius: 999px;
-      margin: 6px 6px 0 0;
-      font-size: .9rem;
-      color: #cfc9ff
-    }
-
-    .footer {
-      padding: 40px 20px;
-      border-top: 1px solid rgba(255, 255, 255, .08)
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0
-    }
-  </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Pixeldrop is a photo app with a weekly rhythm. Gather moments as they happen. Then, once a week, the Drop opens for the people you've chosen, all at once.">
+  <meta name="theme-color" content="#090b10">
+  <title>Pixeldrop | A week worth opening.</title>
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/story/beat-1-knock.png" as="image">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="assets/vendor/scrollama.min.js"></script>
+  <script defer src="story.js"></script>
 </head>
-
 <body>
-  <header>
-    <div class="container row">
-      <a href="index.html" class="brand" aria-label="Pixeldrop home">
-        <img class="logo" src="assets/logo.jpg" alt="Pixeldrop logo" width="38" height="38" />
-        <strong>Pixeldrop</strong>
+  <a class="skip-link" href="#main">Skip to main content</a>
+  <header class="site-header">
+    <div class="nav-shell">
+      <a class="brand" href="index.html" aria-label="Pixeldrop home">
+        <img src="assets/orb-mark-color.svg" alt="" width="38" height="38">
+        <span>Pixeldrop</span>
       </a>
-      <nav aria-label="Primary">
-        <a href="support.html">Support Us</a>
+      <nav aria-label="Primary navigation">
+        <a href="#one-drop">See a week open</a>
+        <a href="#how-built">How it's built</a>
+        <a href="#faq">FAQ</a>
       </nav>
     </div>
   </header>
 
-  <main>
-    <!-- HERO -->
-    <section class="hero container">
-      <div class="hero-grid">
-        <div>
-          <h1>Intentional Social Media</h1>
-          <p class="lead">Post throughout the week. On drop day, everyone’s photos unlock together. Your timeline shows
-            only the people you follow. No explore page or AI injected posts.</p>
-          <div class="cta">
-            <a class="btn primary" href="https://pixeldrop.social/register">Join the alpha</a>
-
-            <!-- Dead links for now (swap hrefs later) -->
-            <a class="btn store" href="#" aria-label="Download on the App Store (link placeholder)">
-              <!-- simple Apple-ish glyph -->
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path
-                  d="M16.6 13.2c0-2 1.7-3 1.8-3.1-1-1.5-2.6-1.7-3.2-1.8-1.4-.1-2.7.8-3.4.8-.7 0-1.8-.8-3-.7-1.5 0-2.9.9-3.7 2.2-1.6 2.7-.4 6.7 1.1 8.9.7 1.1 1.6 2.3 2.8 2.2 1.1 0 1.6-.7 3-.7 1.4 0 1.8.7 3 .7 1.2 0 2-1.1 2.7-2.2.8-1.2 1.1-2.4 1.1-2.4-.1 0-2.2-.8-2.2-3.1Z"
-                  fill="currentColor" />
-                <path d="M14.8 4.6c.6-.7 1-1.7.9-2.6-.9.1-2 .6-2.6 1.3-.6.7-1 1.7-.9 2.6 1 0 2-.5 2.6-1.3Z"
-                  fill="currentColor" />
-              </svg>
-              <span class="badge"><small>Download on the</small><strong>App Store</strong></span>
-            </a>
-
-            <a class="btn store" href="#" aria-label="Get it on Google Play (link placeholder)">
-              <!-- simple Play-ish glyph -->
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M4.5 3.8c-.3.3-.5.8-.5 1.4v13.6c0 .6.2 1.1.5 1.4l8.3-8.2L4.5 3.8Z" fill="currentColor"
-                  opacity=".85" />
-                <path d="M14.2 10.6 6 2.5c.3-.1.6 0 1 .2l10.2 5.7-3 2.2Z" fill="currentColor" />
-                <path d="M14.2 13.4 6 21.5c.3.1.6 0 1-.2l10.2-5.7-3-2.2Z" fill="currentColor" />
-                <path d="M17.6 9.3c.8.4 1.3.8 1.3 1.2 0 .4-.5.8-1.3 1.2l-2.2 1.3-3-2.2 3-2.2 2.2 1.3Z"
-                  fill="currentColor" opacity=".9" />
-              </svg>
-              <span class="badge"><small>Get it on</small><strong>Google Play</strong></span>
-            </a>
-
-            <span class="pill">Next drop: <span id="countdown" class="countdown">calculating…</span></span>
-          </div>
+  <main id="main">
+    <section class="hero section-shell" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <h1 id="hero-title">A week worth<br><em>opening.</em></h1>
+        <p class="hero-body">Pixeldrop is a photo app with a weekly rhythm. Gather moments as they happen. Then, once a week, the Drop opens for the people you've chosen, all at once. Read the week, reply to the people you love, and be done.</p>
+        <div class="hero-actions">
+          <a class="hero-link hero-link-primary" href="#one-drop">See a week open</a>
+          <a class="hero-link hero-link-secondary" href="#how-built">How it's built</a>
         </div>
-        <div class="preview">screenshot area</div>
+      </div>
+      <div class="hero-field" aria-hidden="true">
+        <span class="hero-field-ring"></span>
+        <span class="hero-field-tile tile-one"></span>
+        <span class="hero-field-tile tile-two"></span>
+        <span class="hero-field-tile tile-three"></span>
+        <span class="hero-field-tile tile-four"></span>
+        <span class="hero-field-tile tile-five"></span>
       </div>
     </section>
 
-    <!-- ATTENTION & DESIGN -->
-    <section class="section">
-      <div class="container">
-        <div class="grid cols-2" style="margin-top:var(--gap)">
-          <div class="panel">
-            <h3>Weekly feed refresh</h3>
-            <p>Your feed only changes once a week. No endless stream to keep up with. You can check in,
-              catch up, and put your attention back where you want it.</p>
-          </div>
-          <div class="preview">screenshot area</div>
-        </div>
+    <section class="story" id="one-drop" aria-labelledby="story-title">
+      <div class="section-shell story-intro">
+        <p class="section-kicker">One Drop, start to finish</p>
+        <h2 id="story-title">Ten minutes, once a week.</h2>
+        <p>This is the whole loop: what opens, what you see, and the ending you actually reach.</p>
+      </div>
 
-        <div class="grid cols-2" style="margin-top:var(--gap)">
-          <div class="panel">
-            <h3>No algorithmically served content</h3>
-            <p>Only posts from people you follow. No explore page. No injected profiles. No endless “for you.”</p>
-          </div>
-          <div class="preview">screenshot area</div>
-        </div>
+      <div class="story-track section-shell">
+        <article class="story-beat" data-beat="0">
+          <figure>
+            <div class="phone-shell story-frame is-active" data-frame="0">
+              <img src="assets/story/beat-1-knock.png" width="1206" height="2622" alt="Real iOS lock screen showing one Pixeldrop notification that this week's Drop is ready.">
+            </div>
+            <figcaption class="story-caption" data-step="0">
+              <p class="beat-eyebrow">The Drop is ready</p>
+              <h3>One notification a week. This is it.</h3>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="story-beat" data-beat="1">
+          <figure>
+            <div class="phone-shell story-frame" data-frame="1">
+              <img src="assets/story/beat-2-cover.png" width="1206" height="2622" loading="lazy" alt="Real dark Week 28 opening cover with guest avatars, weekly counts, and a swipe-to-enter prompt.">
+            </div>
+            <figcaption class="story-caption" data-step="1">
+              <p class="beat-eyebrow">The week opens</p>
+              <h3>Like something wrapped. You can already see the shape of it.</h3>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="story-beat" data-beat="2">
+          <figure>
+            <div class="phone-shell story-frame" data-frame="2">
+              <img src="assets/story/beat-3-grid.png" width="1206" height="2622" loading="lazy" alt="Real Week 28 Grid with one Stories shelf and a photo-rich two-column weekly mosaic.">
+            </div>
+            <figcaption class="story-caption" data-step="2">
+              <p class="beat-eyebrow">Everyone, once</p>
+              <h3>The whole week in one view. No ranking, no refresh. Just your people.</h3>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="story-beat" data-beat="3">
+          <figure>
+            <div class="phone-shell story-frame" data-frame="3">
+              <img src="assets/story/beat-4-post.png" width="1206" height="2622" loading="lazy" alt="Real Ava Sol studio post with clay-tool photography and its caption resting underneath.">
+            </div>
+            <figcaption class="story-caption" data-step="3">
+              <p class="beat-eyebrow">Reading</p>
+              <h3>Photos stay photos. The caption rests underneath, like a note.</h3>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="story-beat" data-beat="4">
+          <figure>
+            <div class="phone-shell story-frame" data-frame="4">
+              <img src="assets/story/beat-5-reply.png" width="1206" height="2622" loading="lazy" alt="Real expanded Ava Sol post pane with Private reply selected and an unsent draft ready to send.">
+            </div>
+            <figcaption class="story-caption" data-step="4">
+              <p class="beat-eyebrow">Answering</p>
+              <h3>Say it to the person, not the room.</h3>
+            </figcaption>
+          </figure>
+        </article>
+        <article class="story-beat" data-beat="5">
+          <figure>
+            <div class="phone-shell story-frame" data-frame="5">
+              <img src="assets/story/beat-6-done.png" width="1206" height="2622" loading="lazy" alt="Real opaque dark weekly ending with Done for now, weekly totals, and two exit gestures.">
+            </div>
+            <figcaption class="story-caption" data-step="5">
+              <p class="beat-eyebrow">The ending</p>
+              <h3>Done for now. Back to your Friday.</h3>
+            </figcaption>
+          </figure>
+        </article>
+      </div>
 
-        <div class="grid cols-2" style="margin-top:var(--gap)">
-          <div class="panel">
-            <h3>Be yourself</h3>
-            <p>Custom circles allow you to easily share what you want with who you want. No public metrics broadcast
-              social status.</p>
+      <p class="story-closing section-shell">That's the product. It happens once a week, and it ends.</p>
+    </section>
+
+    <section class="relationships section-shell" aria-labelledby="relationships-title">
+      <div class="section-intro">
+        <p class="section-kicker">Who it's for</p>
+        <h2 id="relationships-title">Made for the people you'd hand your phone to.</h2>
+      </div>
+      <div class="relationship-grid">
+        <article>
+          <div class="card-mark circles-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+          <h3>Circles</h3>
+          <p>Group your people the way you actually think of them: family, the group chat, old friends. Every moment you share is for the circles you choose, and your choices stay yours. Nobody sees how you've organized the people in your life.</p>
+        </article>
+        <article>
+          <div class="card-mark replies-mark" aria-hidden="true"><i></i><i></i></div>
+          <h3>Private replies</h3>
+          <p>The first way to respond is a message to the person, with their moment attached. Conversations start where they'd naturally happen, between the two of you.</p>
+        </article>
+        <article>
+          <div class="card-mark memory-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+          <h3>Places for memory</h3>
+          <p>Profiles and collections hold what's worth keeping. A drop ends. The things you loved in it don't disappear.</p>
+        </article>
+        <article>
+          <div class="card-mark messages-mark">
+            <img src="assets/people/messages.png" width="1206" height="2622" loading="lazy" alt="Real Pixeldrop Messages inbox with fictional conversations, relationship-colored cards, and restrained unread dots.">
           </div>
-          <div class="preview">screenshot area</div>
+          <h3>Messages</h3>
+          <p>Every drop starts conversations. Messages keeps them in one place: private replies arrive with the moment attached, so you both know exactly what you're talking about.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="built" id="how-built" aria-labelledby="built-title">
+      <div class="section-shell built-grid">
+        <div class="built-heading">
+          <p class="section-kicker">How it's built</p>
+          <h2 id="built-title">Built small, on purpose.</h2>
+        </div>
+        <div class="built-body">
+          <article class="built-block">
+            <svg class="built-graphic" viewBox="0 0 120 88" aria-hidden="true" focusable="false">
+              <defs><linearGradient id="tools-chip" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#79a9c7" stop-opacity=".42"/><stop offset="1" stop-color="#8f92bd" stop-opacity=".08"/></linearGradient></defs>
+              <rect x="16" y="12" width="72" height="52" rx="16" fill="url(#tools-chip)" stroke="#a9d1e8" stroke-opacity=".34"/>
+              <rect x="38" y="26" width="66" height="48" rx="15" fill="#111821" stroke="#eef2f5" stroke-opacity=".2"/>
+              <path d="M54 43h34M54 55h22" stroke="#a9d1e8" stroke-opacity=".56" stroke-linecap="round"/>
+            </svg>
+            <div><h3>One person, many tools.</h3>
+            <p>Pixeldrop is currently built by one person, with a lot of help from AI. The code gets written fast. The decisions about what this app values, and what it will never do to the people using it, stay human.</p></div>
+          </article>
+          <article class="built-block">
+            <svg class="built-graphic" viewBox="0 0 120 88" aria-hidden="true" focusable="false">
+              <defs><linearGradient id="servers-chip" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#6faeaa" stop-opacity=".36"/><stop offset="1" stop-color="#79a9c7" stop-opacity=".06"/></linearGradient></defs>
+              <rect x="14" y="14" width="92" height="60" rx="19" fill="url(#servers-chip)" stroke="#a9d1e8" stroke-opacity=".26"/>
+              <circle cx="38" cy="44" r="10" fill="none" stroke="#eef2f5" stroke-opacity=".42"/>
+              <circle cx="82" cy="31" r="7" fill="none" stroke="#eef2f5" stroke-opacity=".32"/>
+              <circle cx="82" cy="59" r="7" fill="none" stroke="#eef2f5" stroke-opacity=".32"/>
+              <path d="M48 41l27-8M48 48l27 9" stroke="#a9d1e8" stroke-opacity=".38"/>
+            </svg>
+            <div><h3>No tracking, no ad machine.</h3>
+            <p>Pixeldrop does not profile you and is not built to sell your attention. The long-term plan is federation: many small servers run by people, like personal blogs or group chats. Small servers do not need ads to survive, and this one never will.</p></div>
+          </article>
+          <article class="built-block">
+            <svg class="built-graphic" viewBox="0 0 120 88" aria-hidden="true" focusable="false">
+              <defs><linearGradient id="ahead-chip" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#8f92bd" stop-opacity=".34"/><stop offset="1" stop-color="#6faeaa" stop-opacity=".07"/></linearGradient></defs>
+              <rect x="14" y="14" width="92" height="60" rx="19" fill="url(#ahead-chip)" stroke="#a9d1e8" stroke-opacity=".24"/>
+              <path d="M34 58V43M60 58V31M86 58V22" stroke="#eef2f5" stroke-opacity=".42" stroke-linecap="round"/>
+              <circle cx="34" cy="43" r="4" fill="#79a9c7"/><circle cx="60" cy="31" r="4" fill="#6faeaa"/><circle cx="86" cy="22" r="4" fill="#8f92bd"/>
+            </svg>
+            <div><h3>What's ahead, plainly.</h3>
+            <p>A small private beta is running now. A public beta is targeted for September 2026. Open source and federation come after the core is stable and reviewed. If any of this changes, this page will change with it.</p></div>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- PRINCIPLES -->
-    <section class="section">
-      <div class="container">
-        <h2>Power to people, not platforms.</h2>
-        <div class="grid cols-3">
-          <div class="panel">
-            <h3>No ads. No tracking.</h3>
-            <p>We don’t sell attention or collect shadow profiles. No ad-tech, no tracking pixels, no third-party data
-              brokers.</p>
-          </div>
+    <section class="beta section-shell" aria-labelledby="beta-title">
+      <div class="beta-copy">
+        <p class="section-kicker">Where things stand</p>
+        <h2 id="beta-title">A small first group is using Pixeldrop now.</h2>
+        <p>Pixeldrop is in private beta with a handful of people, opening real weekly drops together. This stage is deliberately small: the weekly ritual has to feel right for ten people before it can mean anything for more.</p>
+      </div>
+      <div class="beta-orb" aria-hidden="true"><img src="assets/orb-mark-mono.svg" alt="" width="190" height="190"></div>
+    </section>
 
-          <div class="panel">
-            <h3>Free and Open Source</h3>
-            <p>Open source and community-ran, Pixeldrop is free from corporate capture. We build in public to ensure
-              our incentives align with yours.</p>
-          </div>
-
-          <div class="panel">
-            <h3>Connect with everyone</h3>
-            <p>Built on ActivityPub, Pixeldrop is made for a future where users can follow friends across platforms.
-              Users can choose the platform that meets their needs.</p>
-          </div>
-
-        </div>
+    <section class="faq section-shell" id="faq" aria-labelledby="faq-title">
+      <div class="faq-heading">
+        <p class="section-kicker">FAQ</p>
+        <h2 id="faq-title">FAQ</h2>
+      </div>
+      <div class="faq-list">
+        <details>
+          <summary>What's a Drop?<span aria-hidden="true">＋</span></summary>
+          <p>One shared week. Everyone gathers moments as the week happens. On Friday evening the week opens for everyone at once. You read it start to finish. There's a beginning and an end.</p>
+        </details>
+        <details>
+          <summary>When does the Drop open?<span aria-hidden="true">＋</span></summary>
+          <p>Friday evening, for everyone on the same rhythm. Half the point is knowing the people you love are opening the same week you are.</p>
+        </details>
+        <details>
+          <summary>What are Circles and the Lens?<span aria-hidden="true">＋</span></summary>
+          <p>Circles are how you group your people. Every moment is shared to the circles you choose. The Lens is your own viewing filter. See just family, or just the friends you're missing, without your choices ever being visible to anyone else.</p>
+        </details>
+        <details>
+          <summary>How is this different from the feeds I already have?<span aria-hidden="true">＋</span></summary>
+          <p>Mostly by rhythm and ending. Nothing here is ranked or engineered to keep you scrolling. The week has a shape, you reach the end of it, and the app is designed to be put down. Pixeldrop isn't trying to replace anything. It's trying to be the best place for the moments that matter to a smaller set of people.</p>
+        </details>
+        <details>
+          <summary>Can I use it?<span aria-hidden="true">＋</span></summary>
+          <p>Not yet, unless you're in the first beta group. Pixeldrop is deliberately small right now while the weekly ritual gets proven with real people. A public beta is targeted for September 2026.</p>
+        </details>
       </div>
     </section>
-    <section class="section">
-      <div class="container">
-        <div class="panel" style="text-align:center">
-          <h2>Looking for a more traditional social media experience?</h2>
-          <p><a href="https://pixelfed.org">Try Pixelfed</a>.</p>
-        </div>
-      </div>
-    </section>
-    <section class="section">
-      <div class="container" style="text-align:center; max-width:800px; margin: 0 auto;">
-        <blockquote
-          style="font-size:1.25rem; font-style:italic; line-height:1.6; color:var(--muted); border:none; padding:0; margin:0;">
-          “I don’t think we give that gift anymore (the gift of silence). I’m very concerned that our society is much
-          more interested in information than wonder. In noise, rather than silence…”
-          <footer
-            style="margin-top:20px; font-style:normal; font-weight:700; color:var(--ink); border:none; padding:0;">—
-            Fred Rogers</footer>
-        </blockquote>
-      </div>
+
+    <section class="contact section-shell" aria-labelledby="contact-title">
+      <h3 id="contact-title">Say hello</h3>
+      <p>General interest, beta questions, or want to help build Pixeldrop? Reach out: <a href="mailto:admin@pixeldrop.social">admin@pixeldrop.social</a></p>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="container row">
-      <div>
-        <strong>pixeldrop</strong><br>
-        <small style="color:var(--muted)">© <span id="year"></span> Pixeldrop</small>
-      </div>
-      <div style="color:var(--muted)">
-      </div>
+  <footer>
+    <div class="footer-shell">
+      <a class="brand brand-footer" href="index.html"><img src="assets/orb-mark-color.svg" alt="" width="34" height="34"><span>Pixeldrop</span></a>
+      <p>A week worth opening.</p>
+      <nav aria-label="Footer navigation"><a href="#one-drop">See a week open</a><a href="#how-built">How it's built</a><a href="#faq">FAQ</a><a href="mailto:admin@pixeldrop.social">admin@pixeldrop.social</a></nav>
+      <small>© 2026 Pixeldrop · No analytics or third-party runtime requests</small>
     </div>
   </footer>
-
-  <script>
-    // Timezone-aware countdown to Friday 6:00 PM America/Chicago, displayed in the visitor's local time
-    (function () {
-      const tz = 'America/Chicago';
-      const dtf = new Intl.DateTimeFormat('en-US', { timeZone: tz, hour12: false, year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-      function parts(date) { return Object.fromEntries(dtf.formatToParts(date).map(p => [p.type, p.value])); }
-
-      function centralNowAsUTC() {
-        const p = parts(new Date());
-        return new Date(Date.UTC(p.year, p.month - 1, p.day, p.hour, p.minute, p.second));
-      }
-
-      function toUTCFromCentralLocal(year, month, day, hour, minute) {
-        // Create a date that *assumes* the provided central local time is UTC, then adjust by the zone offset at that moment
-        const assumed = new Date(Date.UTC(year, month - 1, day, hour, minute, 0));
-        const pp = parts(assumed);
-        const assumedAsUTC = Date.UTC(pp.year, pp.month - 1, pp.day, pp.hour, pp.minute, pp.second);
-        const offsetMin = (assumedAsUTC - assumed.getTime()) / 60000; // minutes east of UTC
-        return new Date(assumed.getTime() - offsetMin * 60000);
-      }
-
-      function nextFriday18CT() {
-        const nowCentralUTC = centralNowAsUTC();
-        const dow = nowCentralUTC.getUTCDay(); // Central day-of-week
-        const FRIDAY = 5;
-        let add = (7 + FRIDAY - dow) % 7;
-        const mins = nowCentralUTC.getUTCHours() * 60 + nowCentralUTC.getUTCMinutes();
-        if (add === 0 && mins >= 18 * 60) add = 7; // if it's already past 6pm CT today, go to next week
-        const y = nowCentralUTC.getUTCFullYear();
-        const m = nowCentralUTC.getUTCMonth();
-        const d = nowCentralUTC.getUTCDate() + add;
-        return toUTCFromCentralLocal(y, m + 1, d, 18, 0);
-      }
-
-      const target = nextFriday18CT();
-      function tick() {
-        const now = new Date();
-        const diff = target - now;
-        const el1 = document.getElementById('countdown');
-        const el2 = document.getElementById('countdown2');
-        if (diff <= 0) { el1.textContent = 'dropping now ✨'; if (el2) el2.textContent = 'dropping now ✨'; return; }
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        const m = Math.floor((diff / (1000 * 60)) % 60);
-        const s = Math.floor((diff / 1000) % 60);
-        const text = `${d}d ${h}h ${m}m ${s}s`;
-        el1.textContent = text; if (el2) el2.textContent = text;
-      }
-      tick();
-      setInterval(tick, 1000);
-    })();
-
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
 </body>
-
 </html>
