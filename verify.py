@@ -42,6 +42,33 @@ PLACEHOLDER_SHA256 = {
     "35dfde63929c1c8609548f82034d92d48b7eefde9a4b41a7eeca18366011299e",
     "72e70eec2734df92ab4d2c31d882e38ada4b13a9be32b2547d0b0d0d4f3310ac",
 }
+ACCEPTED_CAPTURE_SHA256 = {
+    "assets/story/beat-1-knock.png": "0e1eece6c94d627ad92dd526ebe8aedbc3b21bd4efb03da0280f1ae9b9cd6476",
+    "assets/story/beat-2-cover.png": "ce41d5c7233f1e21467369f1882fb47ba572b2b585cb9172381f3e34877c399b",
+    "assets/story/beat-3-grid.png": "dfda94594e7d7eec6a351ecab8a023d1747bc519e171dff35a2fe9cec4475206",
+    "assets/story/beat-4-post.png": "99cd205ec4172a54d54a2c465483c67d4ce37e9e724c1cc90a154694cce311c0",
+    "assets/story/beat-5-reply.png": "aeec5b6391dad72da1dc548e5d55587fe21efb629dc8d3ba858c7117719f38e6",
+    "assets/story/beat-6-done.png": "37ac004de752b988929eafa202db010db75c257edabfbffadeb3966d58eb4bd2",
+    "assets/people/messages.png": "576b46e236aeac648964c601ed7345da1a85c82aad2dcbe36ca527343d82e23a",
+}
+RETIRED_CAPTURE_SHA256 = {
+    "6281a1111d28a7ee28f6d2f54ed488c0e9cc3ebf8d7e17238b7fb1e83b1703d2",
+    "ca37a756f981a78d2853d7e157453d874a429db6f69324d98be36089d847ddf0",
+    "4c355cfcbe0897ce29f76b9ebe228e217adeccead86be7aa7255e3484e710d3f",
+    "33c585d2ab70e42bf159c207ae5be29960434c7db7d620f0ac5210b21299fb4c",
+}
+ACCEPTED_CAPTURE_PATHS = {
+    "assets/story/beat-1-knock.png",
+    "assets/story/beat-4-post.png",
+    "assets/story/beat-5-reply.png",
+    "assets/people/messages.png",
+}
+CAPTURE_ALT_TERMS = {
+    "assets/story/beat-1-knock.png": ("exactly one", "notification", "pixel-orb app icon"),
+    "assets/story/beat-4-post.png": ("fictional Ava Sol", "blue vase", "Friday studio caption"),
+    "assets/story/beat-5-reply.png": ("fictional Ava", "Private reply selected", "Shared comment unselected"),
+    "assets/people/messages.png": ("CSS-only top-half crop", "fictional conversation rows"),
+}
 REQUIRED_COPY = [
     "A week worth opening.",
     "Pixeldrop is a photo app with a weekly rhythm. Gather moments as they happen. Then, once a week, the Drop opens for the people you've chosen, all at once. Read the week, reply to the people you love, and be done.",
@@ -121,7 +148,14 @@ class Parser(HTMLParser):
             self.links.append(attrs.get("href") or "")
         if tag == "img":
             self.resources.append(attrs.get("src") or "")
-            self.images.append({"src": attrs.get("src"), "alt": attrs.get("alt")})
+            self.images.append({
+                "src": attrs.get("src"),
+                "alt": attrs.get("alt"),
+                "capture_status": attrs.get("data-capture-status"),
+                "capture_slot": attrs.get("data-capture-slot"),
+                "width": attrs.get("width"),
+                "height": attrs.get("height"),
+            })
         if tag in {"link", "script"}:
             resource = attrs.get("href") or attrs.get("src")
             if resource:
@@ -251,7 +285,10 @@ def main() -> int:
     def real_captures() -> str:
         index = INDEX.read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        images_by_source = {str(image["src"]): image for image in parsers[INDEX].images if image["src"]}
+        images_by_source: dict[str, list[dict[str, str | None]]] = {}
+        for image in parsers[INDEX].images:
+            if image["src"]:
+                images_by_source.setdefault(str(image["src"]), []).append(image)
         failures: list[str] = []
         seen_hashes: set[str] = set()
 
@@ -264,18 +301,40 @@ def main() -> int:
             if dimensions != (1206, 2622):
                 failures.append(f"wrong dimensions for {relative}: {dimensions}")
             digest = hashlib.sha256(path.read_bytes()).hexdigest()
-            if digest in PLACEHOLDER_SHA256:
-                failures.append(f"recorded placeholder hash at {relative}: {digest}")
+            if digest in PLACEHOLDER_SHA256 or digest in RETIRED_CAPTURE_SHA256:
+                failures.append(f"retired or placeholder hash at {relative}: {digest}")
+            expected_digest = ACCEPTED_CAPTURE_SHA256.get(relative)
+            if digest != expected_digest:
+                failures.append(
+                    f"accepted capture hash mismatch at {relative}: expected {expected_digest}, got {digest}"
+                )
             if digest in seen_hashes:
                 failures.append(f"duplicate capture bytes at {relative}: {digest}")
             seen_hashes.add(digest)
-            if index.count(f'src="{relative}"') != 1:
-                failures.append(f"expected one exact local index reference: {relative}")
-            image = images_by_source.get(relative)
-            if image is None:
+            expected_references = 2 if relative == "assets/story/beat-5-reply.png" else 1
+            if index.count(f'src="{relative}"') != expected_references:
+                failures.append(
+                    f"expected {expected_references} exact local index reference(s): {relative}"
+                )
+            images = images_by_source.get(relative, [])
+            if not images:
                 failures.append(f"capture is not parsed as an image: {relative}")
-            elif "placeholder" in str(image["alt"]).lower():
-                failures.append(f"placeholder alt language survives: {relative}")
+            else:
+                if any("placeholder" in str(image["alt"]).lower() for image in images):
+                    failures.append(f"placeholder alt language survives: {relative}")
+                if any(image["width"] != "1206" or image["height"] != "2622" for image in images):
+                    failures.append(f"wrong intrinsic HTML dimensions: {relative}")
+                alt_terms = CAPTURE_ALT_TERMS.get(relative, ())
+                if alt_terms and any(
+                    any(term.lower() not in str(image["alt"]).lower() for term in alt_terms)
+                    for image in images
+                ):
+                    failures.append(f"capture alt contract incomplete: {relative}")
+            if relative in ACCEPTED_CAPTURE_PATHS:
+                if any(image["capture_status"] != "accepted" for image in images):
+                    failures.append(f"refreshed capture is not marked accepted: {relative}")
+            elif any(image["capture_status"] is not None for image in images):
+                failures.append(f"unchanged accepted capture carries unexpected status: {relative}")
 
         actual_story_paths = tuple(
             path.relative_to(ROOT).as_posix()
@@ -287,9 +346,49 @@ def main() -> int:
             failures.append("README still describes integrated captures as placeholders")
         if failures:
             raise AssertionError("; ".join(failures))
-        return "seven exact local 1206×2622 PNG paths; recorded placeholders rejected"
+        if 'data-capture-status="pending"' in index or "pending recapture" in readme.lower():
+            failures.append("pending capture language survives Phase B acceptance")
+        if failures:
+            raise AssertionError("; ".join(failures))
+        return "seven exact accepted SHA-256 hashes; 1206×2622 PNG and intrinsic dimensions; retired hashes rejected"
 
     check("Real app capture contract", real_captures)
+
+    def review_polish_contract() -> str:
+        index = INDEX.read_text(encoding="utf-8")
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        required_fragments = [
+            'class="hero-visual"',
+            "assets/hero/noah-window-herbs.webp",
+            "assets/hero/ava-blue-vase.webp",
+            "assets/hero/sana-bookstore.webp",
+            'data-capture-slot="ava-comments"',
+            'data-capture-slot="private-replies-crop"',
+            'data-capture-slot="messages-top"',
+            ".private-replies-crop img",
+            ".messages-mark img",
+            ".private-replies-crop img { top: -520px; }",
+            ".messages-mark { height: 310px; }",
+            ".messages-mark img { top: -4px; width: min(300px, 82%); }",
+            ".messages-mark img { width: min(320px, 96%); }",
+        ]
+        source = index + "\n" + css
+        missing = [fragment for fragment in required_fragments if fragment not in source]
+        if missing:
+            raise AssertionError(f"missing reviewed visual hooks: {missing}")
+        forbidden = ["hero-field", "hero-field-ring", "hero-field-tile", ".phone-shell::before"]
+        survivors = [fragment for fragment in forbidden if fragment in source]
+        if survivors:
+            raise AssertionError(f"removed synthetic visual survives: {survivors}")
+        if index.count('class="hero-photo ') != 3 or index.count('class="hero-orb"') != 1:
+            raise AssertionError("hero must contain exactly three real fictional photos and one orb")
+        required_review_ids = {"relationships", *(f"story-beat-{index}" for index in range(1, 7))}
+        missing_review_ids = sorted(required_review_ids - parsers[INDEX].ids)
+        if missing_review_ids:
+            raise AssertionError(f"missing stable visual-review anchors: {missing_review_ids}")
+        return "three real fictional hero assets, one orb, stable CSS-only crops, and no synthetic phone cutout"
+
+    check("Reviewed website visual hooks", review_polish_contract)
 
     def fallbacks() -> str:
         index = INDEX.read_text(encoding="utf-8")

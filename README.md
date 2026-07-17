@@ -14,7 +14,7 @@ No build is required. Fonts, images, and JavaScript are local. There are no anal
 
 ## Real app captures
 
-The six files under `assets/story/` are accepted, untouched 1206×2622 iPhone 17 Pro Simulator captures from the current Pixeldrop app:
+The six stable files under `assets/story/` are untouched 1206×2622 iPhone 17 Pro Simulator captures from the Pixeldrop app:
 
 - `beat-1-knock.png`
 - `beat-2-cover.png`
@@ -23,11 +23,22 @@ The six files under `assets/story/` are accepted, untouched 1206×2622 iPhone 17
 - `beat-5-reply.png`
 - `beat-6-done.png`
 
-The Messages card uses the accepted real inbox capture at `assets/people/messages.png`, also at 1206×2622. All visible people, avatars, photos, and conversation copy are deterministic fictional seed data.
+All six story frames are accepted. The Phase B host-proof pass also accepted `assets/people/messages.png`. The four refreshed captures are:
 
-The opening and ending frames truthfully show the current dark Begin and Done mattes. The notification frame is a real native iOS lock-screen notification delivered with `simctl push`; its small icon is the current development app icon, retained without compositing or retouching.
+- `beat-1-knock.png`: one real native iOS Notification Center notification from the rebuilt app, showing the installed app's genuine updated pixel-orb icon.
+- `beat-4-post.png`: fictional Ava Sol's deterministic second post, whose portrait blue-vase image matches its caption.
+- `beat-5-reply.png`: the same Ava post expanded to show all three deterministic shared comments, `Private reply` selected, `Shared comment` unselected, and the composer without a keyboard.
+- `assets/people/messages.png`: the real top-of-inbox Messages state used for the large CSS-only top-half crop.
 
-`verify.py` requires all seven stable local paths, exact dimensions, hashes distinct from the retired temporary frames, and truthful image descriptions.
+`verify.py` pins the accepted SHA-256 digest for every capture and rejects all four retired stale digests. `index.html` marks each refreshed use as `data-capture-status="accepted"`.
+
+All visible people, avatars, photos, comments, and conversation copy are deterministic fictional seed data. The accepted Ava and Comments frames visibly retain the source-owned fixture handles `@ava_seed`, `@mira_seed`, `@jules_seed`, and `@sana_seed`. The capture manifest simultaneously required those exact identities and said no seed words; Phase B records that contradiction explicitly. It is accepted as a bounded presentation caveat because the handles identify repository-owned fictional fixtures, expose no personal or viewer data, and do not represent proof, smoke, or developer state. The relationship cards reuse untouched real screenshots through CSS-only crops: the private-reply card focuses the lower response controls from `beat-5-reply.png`, while the Messages card shows a readable top-half slice of `assets/people/messages.png`.
+
+The ending frame truthfully shows the current dark Done matte. The accepted notification is a real native iOS notification delivered with `simctl push`; its icon comes from the rebuilt installed app, without compositing or retouching.
+
+`verify.py` requires all seven stable local paths, exact dimensions, exact accepted hashes, explicit accepted-state markup for the refreshed capture uses, retired-hash rejection, descriptive alt contracts, and the reviewed CSS crop hooks.
+
+The hero uses the stable Pixeldrop orb plus three lightweight WebP derivatives of repository-owned fictional seed imagery under `assets/hero/`. It contains no generated phone UI and makes no network request.
 
 On desktop with JavaScript and motion enabled, the story uses a sticky phone frame and scrollama-driven crossfades. Mobile, reduced-motion, and no-JavaScript presentations render the full six-frame inline sequence with captions.
 

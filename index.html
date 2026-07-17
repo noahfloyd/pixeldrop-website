@@ -38,14 +38,13 @@
           <a class="hero-link hero-link-secondary" href="#how-built">How it's built</a>
         </div>
       </div>
-      <div class="hero-field" aria-hidden="true">
-        <span class="hero-field-ring"></span>
-        <span class="hero-field-tile tile-one"></span>
-        <span class="hero-field-tile tile-two"></span>
-        <span class="hero-field-tile tile-three"></span>
-        <span class="hero-field-tile tile-four"></span>
-        <span class="hero-field-tile tile-five"></span>
-      </div>
+      <figure class="hero-visual">
+        <div class="hero-photo hero-photo-window"><img src="assets/hero/noah-window-herbs.webp" width="608" height="760" alt=""></div>
+        <div class="hero-photo hero-photo-studio"><img src="assets/hero/ava-blue-vase.webp" width="760" height="760" alt=""></div>
+        <div class="hero-photo hero-photo-bookstore"><img src="assets/hero/sana-bookstore.webp" width="608" height="760" alt=""></div>
+        <div class="hero-orb"><img src="assets/orb-mark-color.svg" width="128" height="128" alt=""></div>
+        <figcaption class="visually-hidden">The Pixeldrop relationship orb resting among three repository-owned fictional weekly photos: window herbs, Ava's studio flowers, and a bookstore cart.</figcaption>
+      </figure>
     </section>
 
     <section class="story" id="one-drop" aria-labelledby="story-title">
@@ -56,10 +55,10 @@
       </div>
 
       <div class="story-track section-shell">
-        <article class="story-beat" data-beat="0">
+        <article class="story-beat" id="story-beat-1" data-beat="0">
           <figure>
             <div class="phone-shell story-frame is-active" data-frame="0">
-              <img src="assets/story/beat-1-knock.png" width="1206" height="2622" alt="Real iOS lock screen showing one Pixeldrop notification that this week's Drop is ready.">
+              <img src="assets/story/beat-1-knock.png" width="1206" height="2622" data-capture-slot="notification" data-capture-status="accepted" alt="Real iOS Notification Center showing exactly one Pixeldrop notification that this week's Drop is ready, with the installed pixel-orb app icon.">
             </div>
             <figcaption class="story-caption" data-step="0">
               <p class="beat-eyebrow">The Drop is ready</p>
@@ -67,7 +66,7 @@
             </figcaption>
           </figure>
         </article>
-        <article class="story-beat" data-beat="1">
+        <article class="story-beat" id="story-beat-2" data-beat="1">
           <figure>
             <div class="phone-shell story-frame" data-frame="1">
               <img src="assets/story/beat-2-cover.png" width="1206" height="2622" loading="lazy" alt="Real dark Week 28 opening cover with guest avatars, weekly counts, and a swipe-to-enter prompt.">
@@ -78,7 +77,7 @@
             </figcaption>
           </figure>
         </article>
-        <article class="story-beat" data-beat="2">
+        <article class="story-beat" id="story-beat-3" data-beat="2">
           <figure>
             <div class="phone-shell story-frame" data-frame="2">
               <img src="assets/story/beat-3-grid.png" width="1206" height="2622" loading="lazy" alt="Real Week 28 Grid with one Stories shelf and a photo-rich two-column weekly mosaic.">
@@ -89,10 +88,10 @@
             </figcaption>
           </figure>
         </article>
-        <article class="story-beat" data-beat="3">
+        <article class="story-beat" id="story-beat-4" data-beat="3">
           <figure>
             <div class="phone-shell story-frame" data-frame="3">
-              <img src="assets/story/beat-4-post.png" width="1206" height="2622" loading="lazy" alt="Real Ava Sol studio post with clay-tool photography and its caption resting underneath.">
+              <img src="assets/story/beat-4-post.png" width="1206" height="2622" loading="lazy" data-capture-slot="ava-post" data-capture-status="accepted" alt="Real fictional Ava Sol studio post showing flowers in a blue vase on a paint-marked worktable, with the matching Friday studio caption beneath it.">
             </div>
             <figcaption class="story-caption" data-step="3">
               <p class="beat-eyebrow">Reading</p>
@@ -100,10 +99,10 @@
             </figcaption>
           </figure>
         </article>
-        <article class="story-beat" data-beat="4">
+        <article class="story-beat" id="story-beat-5" data-beat="4">
           <figure>
             <div class="phone-shell story-frame" data-frame="4">
-              <img src="assets/story/beat-5-reply.png" width="1206" height="2622" loading="lazy" alt="Real expanded Ava Sol post pane with Private reply selected and an unsent draft ready to send.">
+              <img src="assets/story/beat-5-reply.png" width="1206" height="2622" loading="lazy" data-capture-slot="ava-comments" data-capture-status="accepted" alt="Real expanded fictional Ava Sol post pane with comments from Mira Vale, Jules Carter, and Sana Noor, plus Private reply selected and Shared comment unselected.">
             </div>
             <figcaption class="story-caption" data-step="4">
               <p class="beat-eyebrow">Answering</p>
@@ -111,7 +110,7 @@
             </figcaption>
           </figure>
         </article>
-        <article class="story-beat" data-beat="5">
+        <article class="story-beat" id="story-beat-6" data-beat="5">
           <figure>
             <div class="phone-shell story-frame" data-frame="5">
               <img src="assets/story/beat-6-done.png" width="1206" height="2622" loading="lazy" alt="Real opaque dark weekly ending with Done for now, weekly totals, and two exit gestures.">
@@ -127,7 +126,7 @@
       <p class="story-closing section-shell">That's the product. It happens once a week, and it ends.</p>
     </section>
 
-    <section class="relationships section-shell" aria-labelledby="relationships-title">
+    <section class="relationships section-shell" id="relationships" aria-labelledby="relationships-title">
       <div class="section-intro">
         <p class="section-kicker">Who it's for</p>
         <h2 id="relationships-title">Made for the people you'd hand your phone to.</h2>
@@ -139,7 +138,9 @@
           <p>Group your people the way you actually think of them: family, the group chat, old friends. Every moment you share is for the circles you choose, and your choices stay yours. Nobody sees how you've organized the people in your life.</p>
         </article>
         <article>
-          <div class="card-mark replies-mark" aria-hidden="true"><i></i><i></i></div>
+          <div class="card-mark capture-crop private-replies-crop">
+            <img src="assets/story/beat-5-reply.png" width="1206" height="2622" loading="lazy" data-capture-slot="private-replies-crop" data-capture-status="accepted" alt="CSS-only lower-pane crop of the same untouched real fictional Ava comments capture, focused on the composer with Private reply selected, Shared comment unselected, and Send visible.">
+          </div>
           <h3>Private replies</h3>
           <p>The first way to respond is a message to the person, with their moment attached. Conversations start where they'd naturally happen, between the two of you.</p>
         </article>
@@ -149,8 +150,8 @@
           <p>Profiles and collections hold what's worth keeping. A drop ends. The things you loved in it don't disappear.</p>
         </article>
         <article>
-          <div class="card-mark messages-mark">
-            <img src="assets/people/messages.png" width="1206" height="2622" loading="lazy" alt="Real Pixeldrop Messages inbox with fictional conversations, relationship-colored cards, and restrained unread dots.">
+          <div class="card-mark capture-crop messages-mark">
+            <img src="assets/people/messages.png" width="1206" height="2622" loading="lazy" data-capture-slot="messages-top" data-capture-status="accepted" alt="CSS-only top-half crop of the untouched real Pixeldrop Messages inbox, showing its header, search and filters, and the first fictional conversation rows.">
           </div>
           <h3>Messages</h3>
           <p>Every drop starts conversations. Messages keeps them in one place: private replies arrive with the moment attached, so you both know exactly what you're talking about.</p>
