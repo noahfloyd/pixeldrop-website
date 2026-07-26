@@ -12,6 +12,29 @@ Open `http://127.0.0.1:4173/`.
 
 No build is required. Fonts, images, and JavaScript are local. There are no analytics or third-party runtime requests.
 
+## Delivery derivatives
+
+The PNGs are the provenance originals and are never what a browser downloads.
+`derivatives.py` re-encodes each one to WebP at identical pixel dimensions, and
+every capture is marked up as:
+
+```html
+<picture>
+  <source type="image/webp" srcset="assets/story/beat-1-knock.webp">
+  <img src="assets/story/beat-1-knock.png" width="1206" height="2622" alt="...">
+</picture>
+```
+
+The PNG stays as the fallback, so `verify.py` keeps pinning the accepted hashes
+and dimensions of the untouched captures while the page ships 649 KB of imagery
+instead of 11.4 MB. `verify.py` additionally requires that each derivative
+exists, matches its capture's dimensions, is smaller than it, and is referenced
+from a `<picture>` source. Regenerate with `python3 derivatives.py` after any
+capture is re-accepted.
+
+`social_card.py` renders `assets/social-card.png`, the 1200x630 Open Graph and
+Twitter preview, from the site's own fonts, colours, and two accepted captures.
+
 ## Real app captures
 
 The six stable files under `assets/story/` are untouched 1206×2622 iPhone 17 Pro Simulator captures from the Pixeldrop app:

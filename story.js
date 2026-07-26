@@ -2,7 +2,10 @@
   const story = document.querySelector(".story");
   const captions = [...document.querySelectorAll(".story-caption")];
   const frames = [...document.querySelectorAll(".story-frame")];
-  const storyImages = frames.map((frame) => frame.querySelector("img")?.getAttribute("src")).filter(Boolean);
+  const storyImages = frames.map((frame) => {
+    const webp = frame.querySelector('source[type="image/webp"]')?.getAttribute("srcset");
+    return webp || frame.querySelector("img")?.getAttribute("src");
+  }).filter(Boolean);
   const motionQuery = window.matchMedia("(min-width: 901px) and (prefers-reduced-motion: no-preference)");
   let scroller = null;
   let preloadStarted = false;

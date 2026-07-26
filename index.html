@@ -5,9 +5,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Pixeldrop is a photo app with a weekly rhythm. Gather moments as they happen. Then, once a week, the Drop opens for the people you've chosen, all at once.">
   <meta name="theme-color" content="#090b10">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Pixeldrop">
+  <meta property="og:title" content="Pixeldrop | A week worth opening.">
+  <meta property="og:description" content="Pixeldrop is a photo app with a weekly rhythm. Gather moments as they happen. Then, once a week, the Drop opens for the people you've chosen, all at once.">
+  <meta property="og:url" content="https://www.pixeldrop.space/">
+  <meta property="og:image" content="https://www.pixeldrop.space/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Pixeldrop: a week worth opening.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Pixeldrop | A week worth opening.">
+  <meta name="twitter:description" content="Pixeldrop is a photo app with a weekly rhythm. Gather moments as they happen. Then, once a week, the Drop opens for the people you've chosen, all at once.">
+  <meta name="twitter:image" content="https://www.pixeldrop.space/assets/social-card.png">
   <title>Pixeldrop | A week worth opening.</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
-  <link rel="preload" href="assets/story/beat-1-knock.png" as="image">
+  <link rel="preload" href="assets/story/beat-1-knock.webp" as="image" type="image/webp">
   <link rel="stylesheet" href="styles.css">
   <script defer src="assets/vendor/scrollama.min.js"></script>
   <script defer src="story.js"></script>
@@ -31,7 +44,7 @@
   <main id="main">
     <section class="hero section-shell" aria-labelledby="hero-title">
       <div class="hero-copy">
-        <h1 id="hero-title">A week worth<br><em>opening.</em></h1>
+        <h1 id="hero-title">A week worth <br><em>opening.</em></h1>
         <p class="hero-body">Pixeldrop is a photo app with a weekly rhythm. Gather moments as they happen. Then, once a week, the Drop opens for the people you've chosen, all at once. Read the week, reply to the people you love, and be done.</p>
         <div class="hero-actions">
           <a class="hero-link hero-link-primary" href="#one-drop">See a week open</a>
@@ -58,7 +71,10 @@
         <article class="story-beat" id="story-beat-1" data-beat="0">
           <figure>
             <div class="phone-shell story-frame is-active" data-frame="0">
-              <img src="assets/story/beat-1-knock.png" width="1206" height="2622" data-capture-slot="notification" data-capture-status="accepted" alt="Real iOS Notification Center showing exactly one Pixeldrop notification that this week's Drop is ready, with the installed pixel-orb app icon.">
+              <picture>
+                <source type="image/webp" srcset="assets/story/beat-1-knock.webp">
+                <img src="assets/story/beat-1-knock.png" width="1206" height="2622" data-capture-slot="notification" data-capture-status="accepted" alt="An iPhone Notification Center showing exactly one Pixeldrop notification, saying this week's Drop is ready, beside the app's pixel-orb icon.">
+              </picture>
             </div>
             <figcaption class="story-caption" data-step="0">
               <p class="beat-eyebrow">The Drop is ready</p>
@@ -69,7 +85,10 @@
         <article class="story-beat" id="story-beat-2" data-beat="1">
           <figure>
             <div class="phone-shell story-frame" data-frame="1">
-              <img src="assets/story/beat-2-cover.png" width="1206" height="2622" loading="lazy" alt="Real dark Week 28 opening cover with guest avatars, weekly counts, and a swipe-to-enter prompt.">
+              <picture>
+                <source type="image/webp" srcset="assets/story/beat-2-cover.webp">
+                <img src="assets/story/beat-2-cover.png" width="1206" height="2622" loading="lazy" alt="The Week 28 cover screen, with the avatars of everyone in the drop, the week's counts, and a prompt to swipe in.">
+              </picture>
             </div>
             <figcaption class="story-caption" data-step="1">
               <p class="beat-eyebrow">The week opens</p>
@@ -80,7 +99,10 @@
         <article class="story-beat" id="story-beat-3" data-beat="2">
           <figure>
             <div class="phone-shell story-frame" data-frame="2">
-              <img src="assets/story/beat-3-grid.png" width="1206" height="2622" loading="lazy" alt="Real Week 28 Grid with one Stories shelf and a photo-rich two-column weekly mosaic.">
+              <picture>
+                <source type="image/webp" srcset="assets/story/beat-3-grid.webp">
+                <img src="assets/story/beat-3-grid.png" width="1206" height="2622" loading="lazy" alt="The Week 28 grid: a single row of stories above a two-column mosaic of the week's photos.">
+              </picture>
             </div>
             <figcaption class="story-caption" data-step="2">
               <p class="beat-eyebrow">Everyone, once</p>
@@ -91,7 +113,10 @@
         <article class="story-beat" id="story-beat-4" data-beat="3">
           <figure>
             <div class="phone-shell story-frame" data-frame="3">
-              <img src="assets/story/beat-4-post.png" width="1206" height="2622" loading="lazy" data-capture-slot="ava-post" data-capture-status="accepted" alt="Real fictional Ava Sol studio post showing flowers in a blue vase on a paint-marked worktable, with the matching Friday studio caption beneath it.">
+              <picture>
+                <source type="image/webp" srcset="assets/story/beat-4-post.webp">
+                <img src="assets/story/beat-4-post.png" width="1206" height="2622" loading="lazy" data-capture-slot="ava-post" data-capture-status="accepted" alt="A post from Ava Sol, one of the demo accounts: flowers in a blue vase on a paint-marked worktable, with her Friday studio caption beneath the photo.">
+              </picture>
             </div>
             <figcaption class="story-caption" data-step="3">
               <p class="beat-eyebrow">Reading</p>
@@ -102,7 +127,10 @@
         <article class="story-beat" id="story-beat-5" data-beat="4">
           <figure>
             <div class="phone-shell story-frame" data-frame="4">
-              <img src="assets/story/beat-5-reply.png" width="1206" height="2622" loading="lazy" data-capture-slot="ava-comments" data-capture-status="accepted" alt="Real expanded fictional Ava Sol post pane with comments from Mira Vale, Jules Carter, and Sana Noor, plus Private reply selected and Shared comment unselected.">
+              <picture>
+                <source type="image/webp" srcset="assets/story/beat-5-reply.webp">
+                <img src="assets/story/beat-5-reply.png" width="1206" height="2622" loading="lazy" data-capture-slot="ava-comments" data-capture-status="accepted" alt="Ava's post expanded, with comments from Mira, Jules, and Sana, and a composer that has Private reply selected instead of Shared comment.">
+              </picture>
             </div>
             <figcaption class="story-caption" data-step="4">
               <p class="beat-eyebrow">Answering</p>
@@ -113,7 +141,10 @@
         <article class="story-beat" id="story-beat-6" data-beat="5">
           <figure>
             <div class="phone-shell story-frame" data-frame="5">
-              <img src="assets/story/beat-6-done.png" width="1206" height="2622" loading="lazy" alt="Real opaque dark weekly ending with Done for now, weekly totals, and two exit gestures.">
+              <picture>
+                <source type="image/webp" srcset="assets/story/beat-6-done.webp">
+                <img src="assets/story/beat-6-done.png" width="1206" height="2622" loading="lazy" alt="The end of the week: a Done for now screen with the week's totals and two ways to leave.">
+              </picture>
             </div>
             <figcaption class="story-caption" data-step="5">
               <p class="beat-eyebrow">The ending</p>
@@ -139,7 +170,10 @@
         </article>
         <article>
           <div class="card-mark capture-crop private-replies-crop">
-            <img src="assets/story/beat-5-reply.png" width="1206" height="2622" loading="lazy" data-capture-slot="private-replies-crop" data-capture-status="accepted" alt="CSS-only lower-pane crop of the same untouched real fictional Ava comments capture, focused on the composer with Private reply selected, Shared comment unselected, and Send visible.">
+            <picture>
+              <source type="image/webp" srcset="assets/story/beat-5-reply.webp">
+              <img src="assets/story/beat-5-reply.png" width="1206" height="2622" loading="lazy" data-capture-slot="private-replies-crop" data-capture-status="accepted" alt="A close-up of that same composer, with Private reply selected, Shared comment unselected, and Send ready.">
+            </picture>
           </div>
           <h3>Private replies</h3>
           <p>The first way to respond is a message to the person, with their moment attached. Conversations start where they'd naturally happen, between the two of you.</p>
@@ -151,7 +185,10 @@
         </article>
         <article>
           <div class="card-mark capture-crop messages-mark">
-            <img src="assets/people/messages.png" width="1206" height="2622" loading="lazy" data-capture-slot="messages-top" data-capture-status="accepted" alt="CSS-only top-half crop of the untouched real Pixeldrop Messages inbox, showing its header, search and filters, and the first fictional conversation rows.">
+            <picture>
+              <source type="image/webp" srcset="assets/people/messages.webp">
+              <img src="assets/people/messages.png" width="1206" height="2622" loading="lazy" data-capture-slot="messages-top" data-capture-status="accepted" alt="The top of the Pixeldrop Messages inbox: its header, search and filters, and the first conversations, all from demo accounts.">
+            </picture>
           </div>
           <h3>Messages</h3>
           <p>Every drop starts conversations. Messages keeps them in one place: private replies arrive with the moment attached, so you both know exactly what you're talking about.</p>

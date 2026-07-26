@@ -64,11 +64,13 @@ ACCEPTED_CAPTURE_PATHS = {
     "assets/people/messages.png",
 }
 CAPTURE_ALT_TERMS = {
-    "assets/story/beat-1-knock.png": ("exactly one", "notification", "pixel-orb app icon"),
-    "assets/story/beat-4-post.png": ("fictional Ava Sol", "blue vase", "Friday studio caption"),
-    "assets/story/beat-5-reply.png": ("fictional Ava", "Private reply selected", "Shared comment unselected"),
-    "assets/people/messages.png": ("CSS-only top-half crop", "fictional conversation rows"),
+    "assets/story/beat-1-knock.png": ("exactly one", "notification", "pixel-orb icon"),
+    "assets/story/beat-4-post.png": ("Ava Sol", "blue vase", "Friday studio caption"),
+    "assets/story/beat-5-reply.png": ("composer", "Private reply selected", "Shared comment"),
+    "assets/people/messages.png": ("Messages inbox", "search and filters", "conversations"),
 }
+DERIVATIVE_BUDGET_KB = 1200
+SOCIAL_CARD = "assets/social-card.png"
 REQUIRED_COPY = [
     "A week worth opening.",
     "Pixeldrop is a photo app with a weekly rhythm. Gather moments as they happen. Then, once a week, the Drop opens for the people you've chosen, all at once. Read the week, reply to the people you love, and be done.",
@@ -190,6 +192,16 @@ def png_dimensions(path: Path) -> tuple[int, int]:
     if raw[:8] != b"\x89PNG\r\n\x1a\n":
         raise AssertionError(f"not PNG: {path.name}")
     return int.from_bytes(raw[16:20], "big"), int.from_bytes(raw[20:24], "big")
+
+
+def webp_dimensions(path: Path) -> tuple[int, int]:
+    raw = path.read_bytes()[:30]
+    if raw[:4] != b"RIFF" or raw[8:12] != b"WEBP" or raw[12:16] != b"VP8 ":
+        raise AssertionError(f"not a simple lossy WebP: {path.name}")
+    return (
+        int.from_bytes(raw[26:28], "little") & 0x3FFF,
+        int.from_bytes(raw[28:30], "little") & 0x3FFF,
+    )
 
 
 def main() -> int:
@@ -407,6 +419,58 @@ def main() -> int:
         return "static source sequence; desktop-only motion enhancement; 66vh beats; short transitions"
 
     check("No-JS, reduced-motion, mobile, and scrollama source contract", fallbacks)
+
+    def delivery_derivatives() -> str:
+        index = INDEX.read_text(encoding="utf-8")
+        failures: list[str] = []
+        total_kb = 0.0
+        for relative in CAPTURE_PATHS:
+            source = ROOT / relative
+            derivative = source.with_suffix(".webp")
+            if not derivative.is_file():
+                failures.append(f"missing WebP derivative: {derivative.name}")
+                continue
+            if webp_dimensions(derivative) != png_dimensions(source):
+                failures.append(f"derivative dimensions drift from capture: {derivative.name}")
+            if derivative.stat().st_size >= source.stat().st_size:
+                failures.append(f"derivative is not smaller than capture: {derivative.name}")
+            total_kb += derivative.stat().st_size / 1024
+            reference = f'<source type="image/webp" srcset="{derivative.relative_to(ROOT).as_posix()}">'
+            expected = 2 if relative == "assets/story/beat-5-reply.png" else 1
+            if index.count(reference) != expected:
+                failures.append(f"expected {expected} picture source(s) for {derivative.name}")
+        if total_kb > DERIVATIVE_BUDGET_KB:
+            failures.append(f"delivered capture bytes {total_kb:.0f} KB over {DERIVATIVE_BUDGET_KB} KB budget")
+        if 'href="assets/story/beat-1-knock.webp"' not in index:
+            failures.append("first frame is not preloaded as WebP")
+        if failures:
+            raise AssertionError("; ".join(failures))
+        return f"seven WebP derivatives at capture dimensions; {total_kb:.0f} KB delivered"
+
+    check("WebP delivery derivatives", delivery_derivatives)
+
+    def social_preview() -> str:
+        index = INDEX.read_text(encoding="utf-8")
+        card = ROOT / SOCIAL_CARD
+        if not card.is_file():
+            raise AssertionError("missing social card image")
+        if png_dimensions(card) != (1200, 630):
+            raise AssertionError(f"social card must be 1200x630, got {png_dimensions(card)}")
+        required = [
+            '<meta property="og:title"',
+            '<meta property="og:description"',
+            '<meta property="og:url" content="https://www.pixeldrop.space/">',
+            f'<meta property="og:image" content="https://www.pixeldrop.space/{SOCIAL_CARD}">',
+            '<meta property="og:image:width" content="1200">',
+            '<meta name="twitter:card" content="summary_large_image">',
+            f'<meta name="twitter:image" content="https://www.pixeldrop.space/{SOCIAL_CARD}">',
+        ]
+        missing = [fragment for fragment in required if fragment not in index]
+        if missing:
+            raise AssertionError(f"missing social preview tags: {missing}")
+        return "1200x630 card; Open Graph and Twitter tags present"
+
+    check("Social link preview", social_preview)
 
     def XML_docs() -> str:
         XML_docs = [ROOT / "sitemap.xml", *sorted((ROOT / "assets").glob("*.svg"))]
