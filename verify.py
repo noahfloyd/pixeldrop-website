@@ -519,6 +519,35 @@ def main() -> int:
 
     check("Subset WOFF2 fonts", subset_fonts)
 
+    def hero_drop_animation() -> str:
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        failures: list[str] = []
+        for name in ("hero-settle-window", "hero-settle-studio", "hero-settle-bookstore",
+                     "hero-orb-arrive", "hero-glow"):
+            if f"@keyframes {name}" not in css:
+                failures.append(f"missing keyframes: {name}")
+        # the three photos must land on the same frame: that simultaneity is the point
+        landings = {}
+        for selector, name in (
+            (".hero-photo-window", "hero-settle-window"),
+            (".hero-photo-studio", "hero-settle-studio"),
+            (".hero-photo-bookstore", "hero-settle-bookstore"),
+        ):
+            match = re.search(re.escape(name) + r" (\d+)ms [^;]*? (\d+)ms backwards", css)
+            if not match:
+                failures.append(f"cannot read animation timing for {selector}")
+                continue
+            landings[selector] = int(match.group(1)) + int(match.group(2))
+        if len(set(landings.values())) > 1:
+            failures.append(f"hero photos do not land together: {landings}")
+        if "prefers-reduced-motion: reduce" not in css:
+            failures.append("reduced-motion escape hatch missing")
+        if failures:
+            raise AssertionError("; ".join(failures))
+        return f"three photos settle together at {next(iter(set(landings.values())), '?')}ms; orb and glow follow"
+
+    check("Hero drop animation", hero_drop_animation)
+
     def XML_docs() -> str:
         XML_docs = [ROOT / "sitemap.xml", *sorted((ROOT / "assets").glob("*.svg"))]
         for path in XML_docs:

@@ -183,9 +183,9 @@ h3 { margin-bottom: 12px; font-size: 29px; line-height: 1.1; letter-spacing: -0.
   box-shadow: 0 28px 72px rgba(0, 0, 0, 0.42);
 }
 .hero-photo img { width: 100%; height: 100%; object-fit: cover; }
-.hero-photo-window { z-index: 1; top: 8%; left: 4%; width: 43%; aspect-ratio: 0.8; transform: rotate(-4deg); }
-.hero-photo-studio { z-index: 3; top: 19%; right: 2%; width: 49%; aspect-ratio: 1; transform: rotate(3deg); }
-.hero-photo-bookstore { z-index: 2; right: 14%; bottom: 3%; width: 36%; aspect-ratio: 0.8; transform: rotate(7deg); }
+.hero-photo-window { z-index: 1; top: 8%; left: 4%; width: 43%; aspect-ratio: 0.8; transform: rotate(-4deg); animation: hero-settle-window 1500ms cubic-bezier(0.16, 0.84, 0.24, 1) 0ms backwards; }
+.hero-photo-studio { z-index: 3; top: 19%; right: 2%; width: 49%; aspect-ratio: 1; transform: rotate(3deg); animation: hero-settle-studio 1260ms cubic-bezier(0.16, 0.84, 0.24, 1) 240ms backwards; }
+.hero-photo-bookstore { z-index: 2; right: 14%; bottom: 3%; width: 36%; aspect-ratio: 0.8; transform: rotate(7deg); animation: hero-settle-bookstore 1020ms cubic-bezier(0.16, 0.84, 0.24, 1) 480ms backwards; }
 .hero-orb {
   position: absolute;
   z-index: 5;
@@ -201,6 +201,33 @@ h3 { margin-bottom: 12px; font-size: 29px; line-height: 1.1; letter-spacing: -0.
   box-shadow: 0 22px 50px rgba(0, 0, 0, 0.48), 0 0 0 9px rgba(9, 11, 16, 0.5);
 }
 .hero-orb img { width: 88%; height: 88%; }
+
+/* The drop, performed once on load: the week's photos are gathered at
+   different moments, drift in from where they were, and land together. The
+   orb arrives on the beat they land. Reduced motion collapses all of it to
+   the settled composition via the global rule below. */
+.hero-visual::before { animation: hero-glow 1700ms ease-out 260ms backwards; }
+.hero-orb { animation: hero-orb-arrive 620ms cubic-bezier(0.16, 0.84, 0.24, 1) 1440ms backwards; }
+@keyframes hero-settle-window {
+  from { opacity: 0.3; transform: translate3d(-14%, -12%, 0) rotate(-14deg) scale(0.9); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) rotate(-4deg) scale(1); }
+}
+@keyframes hero-settle-studio {
+  from { opacity: 0.3; transform: translate3d(17%, -9%, 0) rotate(13deg) scale(0.9); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) rotate(3deg) scale(1); }
+}
+@keyframes hero-settle-bookstore {
+  from { opacity: 0.3; transform: translate3d(9%, 18%, 0) rotate(18deg) scale(0.9); }
+  to { opacity: 1; transform: translate3d(0, 0, 0) rotate(7deg) scale(1); }
+}
+@keyframes hero-orb-arrive {
+  from { opacity: 0; transform: scale(0.82); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes hero-glow {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
 
 .story { padding: 132px 0 0; border-top: 1px solid var(--line); background: var(--night-raised); }
 .story-intro { max-width: 880px; margin-bottom: 90px; }
