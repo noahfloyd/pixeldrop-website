@@ -70,6 +70,19 @@ CAPTURE_ALT_TERMS = {
     "assets/people/messages.png": ("Messages inbox", "search and filters", "conversations"),
 }
 DERIVATIVE_BUDGET_KB = 1200
+FONT_BUDGET_KB = 200
+SUBSET_FONTS = (
+    "assets/fonts/Fraunces-500.woff2",
+    "assets/fonts/Fraunces-600.woff2",
+    "assets/fonts/Inter-400.woff2",
+    "assets/fonts/Inter-500.woff2",
+    "assets/fonts/Inter-600.woff2",
+)
+SUBSET_RANGES = (
+    (0x0020, 0x007E), (0x00A0, 0x00FF), (0x0100, 0x017F),
+    (0x2000, 0x206F), (0x20AC, 0x20AC), (0x2122, 0x2122),
+    (0x2190, 0x2193), (0x2212, 0x2212), (0xFF0B, 0xFF0B),
+)
 SOCIAL_CARD = "assets/social-card.png"
 REQUIRED_COPY = [
     "A week worth opening.",
@@ -471,6 +484,40 @@ def main() -> int:
         return "1200x630 card; Open Graph and Twitter tags present"
 
     check("Social link preview", social_preview)
+
+    def subset_fonts() -> str:
+        css = (ROOT / "styles.css").read_text(encoding="utf-8")
+        failures: list[str] = []
+        total_kb = 0.0
+        for relative in SUBSET_FONTS:
+            path = ROOT / relative
+            if not path.is_file():
+                failures.append(f"missing subset font: {relative}")
+                continue
+            if path.read_bytes()[:4] != b"wOF2":
+                failures.append(f"not WOFF2: {relative}")
+            total_kb += path.stat().st_size / 1024
+            if f'url("{relative}") format("woff2")' not in css:
+                failures.append(f"font not referenced by @font-face: {relative}")
+        if 'format("truetype")' in css:
+            failures.append("a TrueType @font-face source is still being served")
+        if total_kb > FONT_BUDGET_KB:
+            failures.append(f"delivered fonts {total_kb:.0f} KB over {FONT_BUDGET_KB} KB budget")
+        # every character the page renders must exist in the subset
+        covered = {point for start, end in SUBSET_RANGES for point in range(start, end + 1)}
+        rendered = set(parsers[INDEX].text) | {character for value in REQUIRED_COPY for character in value}
+        uncovered = sorted(character for character in rendered
+                           if not character.isspace() and ord(character) not in covered)
+        if uncovered:
+            failures.append(
+                "rendered copy uses characters outside the font subset: "
+                + ", ".join(f"{character!r} U+{ord(character):04X}" for character in uncovered)
+            )
+        if failures:
+            raise AssertionError("; ".join(failures))
+        return f"five subset WOFF2 faces; {total_kb:.0f} KB delivered; rendered copy fully covered"
+
+    check("Subset WOFF2 fonts", subset_fonts)
 
     def XML_docs() -> str:
         XML_docs = [ROOT / "sitemap.xml", *sorted((ROOT / "assets").glob("*.svg"))]
